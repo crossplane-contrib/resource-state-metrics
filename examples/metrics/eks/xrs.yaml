@@ -1,0 +1,77 @@
+# Sample EKS XRs for testing metrics
+# Apply with: kubectl apply -f examples/metrics/eks/xrs.yaml
+#
+# Labels:
+#   team: team-a or team-b (for label selector demos)
+#   env: production, staging, or dev
+#
+# Namespaces:
+#   team-a: production-eks, staging-eks
+#   team-b: dev-eks
+#
+# Prerequisites:
+#   kubectl create namespace team-a
+#   kubectl create namespace team-b
+---
+apiVersion: aws.platform.upbound.io/v1alpha1
+kind: EKS
+metadata:
+  name: production-eks
+  namespace: team-a
+  labels:
+    team: team-a
+    env: production
+spec:
+  parameters:
+    id: production-eks
+    region: us-west-2
+    providerConfigName: default
+    version: "1.34"
+    accessConfig:
+      authenticationMode: API_AND_CONFIG_MAP
+      bootstrapClusterCreatorAdminPermissions: true
+    nodes:
+      count: 3
+      instanceType: m5.xlarge
+---
+apiVersion: aws.platform.upbound.io/v1alpha1
+kind: EKS
+metadata:
+  name: staging-eks
+  namespace: team-a
+  labels:
+    team: team-a
+    env: staging
+spec:
+  parameters:
+    id: staging-eks
+    region: eu-west-1
+    providerConfigName: default
+    version: "1.33"
+    accessConfig:
+      authenticationMode: API
+      bootstrapClusterCreatorAdminPermissions: true
+    nodes:
+      count: 2
+      instanceType: t3.medium
+---
+apiVersion: aws.platform.upbound.io/v1alpha1
+kind: EKS
+metadata:
+  name: dev-eks
+  namespace: team-b
+  labels:
+    team: team-b
+    env: dev
+spec:
+  parameters:
+    id: dev-eks
+    region: us-east-1
+    providerConfigName: default
+    version: "1.34"
+    accessConfig:
+      authenticationMode: CONFIG_MAP
+      bootstrapClusterCreatorAdminPermissions: true
+    nodes:
+      count: 1
+      instanceType: t3.small

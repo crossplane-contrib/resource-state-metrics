@@ -1,0 +1,85 @@
+# Example: Kubernetes Quantity Conversion (Starlark Resolver)
+# Use Case: Convert Kubernetes resource quantities (CPU, memory) to numeric values for Prometheus
+# Resolver: Starlark (Python-like scripting)
+#
+# Why Starlark?
+# - quantity_to_float() builtin parses Kubernetes quantities: "100m" -> 0.1, "1Gi" -> 1073741824
+# - Handles all Kubernetes quantity suffixes: m, Ki, Mi, Gi, Ti, Pi, Ei
+# - CEL and Unstructured resolvers cannot parse quantity strings
+#
+# Metrics Generated:
+# - eks_node_info (gauge): EKS cluster node configuration details
+#
+# PromQL Queries:
+# - Total nodes across all clusters: sum(eks_node_info{info="node_count"})
+# - Clusters by instance type: count by (instance_type) (eks_node_info{info="node_count"})
+#
+# Target XR:
+#   apiVersion: aws.platform.upbound.io/v1alpha1
+#   kind: EKS
+
+apiVersion: resource-state-metrics.instrumentation.k8s-sigs.io/v1alpha1
+kind: ResourceMetricsMonitor
+metadata:
+  name: xr-node-info
+  namespace: resource-state-metrics
+spec:
+  configuration:
+    stores:
+      - group: "aws.platform.upbound.io"
+        version: "v1alpha1"
+        kind: "EKS"
+        resource: "eks"
+        families:
+          - name: "eks_node_info"
+            help: "EKS cluster node configuration"
+            resolver: starlark
+            starlark:
+              script: |
+                def generate():
+                    samples = []
+                    params = obj.get("spec", {}).get("parameters", {})
+                    nodes = params.get("nodes", {})
+                    region = params.get("region", "unknown")
+
+                    # Extract node configuration
+                    node_count = nodes.get("count", 0)
+                    instance_type = nodes.get("instanceType", "unknown")
+
+                    # Emit node count as a metric
+                    samples.append(metric(
+                        labels={
+                            "info": "node_count",
+                            "instance_type": instance_type,
+                            "region": region,
+                        },
+                        value=float(node_count)
+                    ))
+
+                    # Example: if your XR had resource quantity fields like "500m" CPU
+                    # or "2Gi" memory, you would use quantity_to_float() like this:
+                    #
+                    # cpu = nodes.get("cpu", "0")
+                    # if cpu != "0":
+                    #     samples.append(metric(
+                    #         labels={"info": "cpu_cores", "region": region},
+                    #         value=quantity_to_float(cpu)
+                    #     ))
+                    #
+                    # memory = nodes.get("memory", "0")
+                    # if memory != "0":
+                    #     samples.append(metric(
+                    #         labels={"info": "memory_bytes", "region": region},
+                    #         value=quantity_to_float(memory)
+                    #     ))
+
+                    return samples
+
+                families = [
+                    family(
+                        name="eks_node_info",
+                        help="EKS cluster node configuration",
+                        kind="gauge",
+                        samples=generate()
+                    )
+                ]

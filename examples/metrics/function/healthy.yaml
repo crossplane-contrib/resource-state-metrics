@@ -1,0 +1,47 @@
+# Example: Function Health Status
+# Use Case: Monitor Crossplane composition functions
+# Resolver: CEL (Common Expression Language)
+#
+# Metrics Generated:
+# - function_healthy (gauge): 1=healthy, 0=unhealthy
+#
+# PromQL Queries:
+# - Unhealthy functions: function_healthy == 0
+# - Check specific function: function_healthy{name="crossplane-contrib-function-auto-ready"} == 1
+# - Function health percentage: (sum(function_healthy) / count(function_healthy)) * 100
+#
+# Target Resource:
+#   apiVersion: pkg.crossplane.io/v1
+#   kind: Function
+#
+
+apiVersion: resource-state-metrics.instrumentation.k8s-sigs.io/v1alpha1
+kind: ResourceMetricsMonitor
+metadata:
+  name: function-health
+  namespace: resource-state-metrics
+spec:
+  configuration:
+    stores:
+      - group: "pkg.crossplane.io"
+        version: "v1"
+        kind: "Function"
+        resource: "functions"
+        resolver: "cel"
+        families:
+          - name: "function_healthy"
+            help: "Health status of Crossplane functions (1=healthy, 0=unhealthy)"
+            metrics:
+              - labels:
+                  - name: "package"
+                    value: "o.spec.package"
+                  - name: "revision"
+                    value: "o.status.currentRevision != null ? o.status.currentRevision : 'unknown'"
+                value: "o.status.conditions.exists(c, c.type == 'Healthy' && c.status == 'True') ? 1 : 0"
+          - name: "function_installed"
+            help: "Installed status of Crossplane functions (1=installed, 0=not installed)"
+            metrics:
+              - labels:
+                  - name: "package"
+                    value: "o.spec.package"
+                value: "o.status.conditions.exists(c, c.type == 'Installed' && c.status == 'True') ? 1 : 0"

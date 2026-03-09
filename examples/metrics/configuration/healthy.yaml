@@ -1,0 +1,46 @@
+# Example: Configuration Health Status
+# Use Case: Monitor Crossplane configurations
+#
+# Metrics Generated:
+# - configuration_healthy (gauge): 1=healthy, 0=unhealthy
+#
+# PromQL Queries:
+# - Unhealthy configurations: configuration_healthy == 0
+# - Check RSM configuration: configuration_healthy{name="resource-state-metrics"} == 1
+# - All healthy: (sum(configuration_healthy) / count(configuration_healthy)) * 100
+#
+# Target Resource:
+#   apiVersion: pkg.crossplane.io/v1
+#   kind: Configuration
+#
+
+apiVersion: resource-state-metrics.instrumentation.k8s-sigs.io/v1alpha1
+kind: ResourceMetricsMonitor
+metadata:
+  name: configuration-health
+  namespace: resource-state-metrics
+spec:
+  configuration:
+    stores:
+      - group: "pkg.crossplane.io"
+        version: "v1"
+        kind: "Configuration"
+        resource: "configurations"
+        resolver: "cel"
+        families:
+          - name: "configuration_healthy"
+            help: "Health status of Crossplane configurations (1=healthy, 0=unhealthy)"
+            metrics:
+              - labels:
+                  - name: "package"
+                    value: "o.spec.package"
+                  - name: "revision"
+                    value: "o.status.currentRevision != null ? o.status.currentRevision : 'unknown'"
+                value: "o.status.conditions.exists(c, c.type == 'Healthy' && c.status == 'True') ? 1 : 0"
+          - name: "configuration_installed"
+            help: "Installed status of Crossplane configurations (1=installed, 0=not installed)"
+            metrics:
+              - labels:
+                  - name: "package"
+                    value: "o.spec.package"
+                value: "o.status.conditions.exists(c, c.type == 'Installed' && c.status == 'True') ? 1 : 0"

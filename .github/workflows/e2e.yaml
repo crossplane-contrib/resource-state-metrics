@@ -1,0 +1,68 @@
+name: End to End Testing
+
+on:
+  # https://securitylab.github.com/resources/github-actions-preventing-pwn-requests/
+  # pull_request_target is potentially dangerous target so we keep it strict
+  # under the label and benefit from secret propagation
+  pull_request_target:
+    types:
+      - synchronize
+      - labeled
+
+jobs:
+  e2e:
+    if: contains(github.event.pull_request.labels.*.name, 'run-e2e-tests')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        id: checkout
+        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+
+      - name: Install up
+        uses: upbound/action-up@53fe6395637d884c80d2bbc8c2d75d0ece776ced # v1
+        with:
+          skip-login: true
+
+      - name: Build project
+        run: up project build
+
+      - name: Run e2e tests
+        run: up test run tests/* --e2e --local --skip-control-plane-cleanup
+
+      - name: Install kind CLI
+        if: failure()
+        run: |
+          curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.20.0/kind-linux-amd64
+          chmod +x ./kind
+          sudo mv ./kind /usr/local/bin/kind
+
+      - name: Install supportbundle CLI
+        if: failure()
+        run: |
+          curl -Lo ./support-bundle https://github.com/replicatedhq/troubleshoot/releases/latest/download/support-bundle_linux_amd64.tar.gz
+          tar -xzf ./support-bundle
+          chmod +x ./support-bundle
+          sudo mv ./support-bundle /usr/local/bin/support-bundle
+
+      - name: Collect diagnostic information
+        if: failure()
+        run: |
+          kind get clusters
+          FIRST_CLUSTER=$(kind get clusters | head -n 1)
+          if [ -n "$FIRST_CLUSTER" ]; then
+            kind export kubeconfig --name "$FIRST_CLUSTER"
+            support-bundle --kubeconfig ~/.kube/config --output support-bundle.tar.gz ./template/.github/supportbundle.yaml
+          else
+            echo "No kind clusters found"
+            touch support-bundle.tar.gz
+          fi
+
+      - name: Upload support bundle
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: support-bundle-${{ github.event.pull_request.head.sha }}
+          path: support-bundle.tar.gz
+          retention-days: 1

@@ -1,0 +1,49 @@
+# Example: CEL Map Array Expansion for Conditions
+# Use Case: Generate one metric per condition type using CEL map() - avoids Starlark for simple iteration
+# Resolver: CEL (Common Expression Language)
+#
+# Why CEL map()?
+# - .map() expands arrays into multiple metric samples (one per element)
+# - Unlike .exists()/.filter() which return a single value, .map() generates N values
+# - Simpler than Starlark for straightforward array-to-metrics expansion
+#
+# Metrics Generated:
+# - eks_condition (gauge): 1=True, 0=False per condition type
+#
+# PromQL Queries:
+# - Not-ready XRs: eks_condition{condition_type="Ready"} == 0
+# - Not-synced XRs: eks_condition{condition_type="Synced"} == 0
+# - All failing conditions: eks_condition == 0
+#
+# NOTE: This uses metric-level resolver override. The resolver is set on the
+# metric itself rather than the store or family, allowing mixed resolvers within
+# a single family if needed.
+#
+# Target XR:
+#   apiVersion: aws.platform.upbound.io/v1alpha1
+#   kind: EKS
+
+apiVersion: resource-state-metrics.instrumentation.k8s-sigs.io/v1alpha1
+kind: ResourceMetricsMonitor
+metadata:
+  name: xr-conditions-cel-map
+  namespace: resource-state-metrics
+spec:
+  configuration:
+    stores:
+      - group: "aws.platform.upbound.io"
+        version: "v1alpha1"
+        kind: "EKS"
+        resource: "eks"
+        families:
+          - name: "eks_condition"
+            help: "Condition status per type for Crossplane XRs (1=True, 0=False)"
+            metrics:
+              # CEL map() generates one metric sample per condition in the array.
+              # Labels and values are expanded in parallel - the Nth label pairs
+              # with the Nth value.
+              - resolver: "cel"
+                labels:
+                  - name: "condition_type"
+                    value: "o.status.conditions.map(c, c.type)"
+                value: "o.status.conditions.map(c, int(c.status == 'True' ? 1 : 0))"

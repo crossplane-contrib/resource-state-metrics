@@ -1,0 +1,43 @@
+# Example: Track XR Spec Parameters as Info Metric
+# Use Case: Expose EKS cluster configuration as Prometheus labels for join queries
+# Resolver: CEL (Common Expression Language)
+#
+# Metrics Generated:
+# - eks_info (gauge): Always 1, with configuration details as labels
+#
+# PromQL Queries:
+# - List all EKS clusters with config: eks_info
+# - Filter by region: eks_info{region="us-west-2"}
+# - Join with ready status: eks_ready * on(name) group_left(region, instance_type) eks_info
+#
+# Target XR:
+#   apiVersion: aws.platform.upbound.io/v1alpha1
+#   kind: EKS
+
+apiVersion: resource-state-metrics.instrumentation.k8s-sigs.io/v1alpha1
+kind: ResourceMetricsMonitor
+metadata:
+  name: xr-info
+  namespace: resource-state-metrics
+spec:
+  configuration:
+    stores:
+      - group: "aws.platform.upbound.io"
+        version: "v1alpha1"
+        kind: "EKS"
+        resource: "eks"
+        resolver: "cel"
+        families:
+          - name: "eks_info"
+            help: "Information about Crossplane XR configuration (always 1)"
+            metrics:
+              - labels:
+                  - name: "region"
+                    value: "o.spec.parameters.region != null ? o.spec.parameters.region : 'unknown'"
+                  - name: "id"
+                    value: "o.spec.parameters.id != null ? o.spec.parameters.id : 'unknown'"
+                  - name: "node_count"
+                    value: "string(o.spec.parameters.nodes.count)"
+                  - name: "instance_type"
+                    value: "o.spec.parameters.nodes.instanceType != null ? o.spec.parameters.nodes.instanceType : 'unknown'"
+                value: "1"

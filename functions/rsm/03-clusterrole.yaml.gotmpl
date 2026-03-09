@@ -1,0 +1,75 @@
+# code: language=yaml
+# yaml-language-server: $schema=../../.up/json/models/index.schema.json
+
+{{ $allowedAPIGroups := list }}
+{{ if hasKey $xr.spec.parameters "rbac" }}
+  {{ if hasKey $xr.spec.parameters.rbac "allowedAPIGroups" }}
+    {{ $allowedAPIGroups = $xr.spec.parameters.rbac.allowedAPIGroups }}
+  {{ end }}
+{{ end }}
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: resource-state-metrics
+  annotations:
+    {{ setResourceNameAnnotation "clusterrole" }}
+    gotemplating.fn.crossplane.io/ready: "True"
+  labels:
+    app.kubernetes.io/component: exporter
+    app.kubernetes.io/name: resource-state-metrics
+    app.kubernetes.io/version: 0.0.1
+rules:
+  # Core permissions for the controller
+  - apiGroups:
+      - apiextensions.k8s.io
+    resources:
+      - customresourcedefinitions
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - authentication.k8s.io
+    resources:
+      - tokenreviews
+    verbs:
+      - create
+  - apiGroups:
+      - authorization.k8s.io
+    resources:
+      - subjectaccessreviews
+    verbs:
+      - create
+  - apiGroups:
+      - resource-state-metrics.instrumentation.k8s-sigs.io
+    resources:
+      - resourcemetricsmonitors
+      - resourcemetricsmonitors/status
+    verbs:
+      - '*'
+  # Permissions for watching resources to collect metrics
+  {{ if eq (len $allowedAPIGroups) 0 }}
+  # Wildcard permissions (default) - can watch all API groups
+  - apiGroups:
+      - '*'
+    resources:
+      - '*'
+    verbs:
+      - get
+      - list
+      - watch
+  {{ else }}
+  # Specific API groups only (production-recommended)
+  {{ range $allowedAPIGroups }}
+  - apiGroups:
+      - {{ . }}
+    resources:
+      - '*'
+    verbs:
+      - get
+      - list
+      - watch
+  {{ end }}
+  {{ end }}

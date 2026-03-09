@@ -1,0 +1,112 @@
+apiVersion: apiextensions.crossplane.io/v2
+kind: CompositeResourceDefinition
+metadata:
+  name: resourcestatemetrics.metrics.crossplane.io
+spec:
+  group: metrics.crossplane.io
+  names:
+    categories:
+    - crossplane
+    kind: ResourceStateMetrics
+    plural: resourcestatemetrics
+  scope: Cluster
+  versions:
+  - name: v1alpha1
+    referenceable: true
+    schema:
+      openAPIV3Schema:
+        description: ResourceStateMetrics deploys a resource-state-metrics controller
+          that generates Prometheus metrics for Kubernetes custom resources based on
+          ResourceMetricsMonitor configurations.
+        properties:
+          spec:
+            description: ResourceStateMetricsSpec defines the desired state of ResourceStateMetrics.
+            properties:
+              parameters:
+                description: Parameters for configuring the resource-state-metrics deployment.
+                properties:
+                  deployment:
+                    description: Configuration for the resource-state-metrics controller deployment.
+                    properties:
+                      image:
+                        description: Container image configuration for the resource-state-metrics controller.
+                        properties:
+                          repository:
+                            description: Container image repository (e.g., ghcr.io/kubernetes-sigs/resource-state-metrics).
+                            type: string
+                          tag:
+                            description: Container image tag. Use 'latest' for the most recent version
+                              or a specific version tag.
+                            type: string
+                        type: object
+                      replicas:
+                        description: Number of controller replicas to run. Defaults to 1 for
+                          high availability consider 2 or more.
+                        type: number
+                      resources:
+                        description: Resource requirements for the controller pods.
+                        properties:
+                          limits:
+                            description: Maximum resource limits for the controller container.
+                            properties:
+                              cpu:
+                                description: Maximum CPU allocation (e.g., '200m' for 200 millicores).
+                                type: string
+                              memory:
+                                description: Maximum memory allocation (e.g., '256Mi').
+                                type: string
+                            type: object
+                          requests:
+                            description: Requested resources for the controller container.
+                            properties:
+                              cpu:
+                                description: Requested CPU (e.g., '100m' for 100 millicores).
+                                type: string
+                              memory:
+                                description: Requested memory (e.g., '128Mi').
+                                type: string
+                            type: object
+                        type: object
+                    type: object
+                  namespace:
+                    description: Kubernetes namespace where the resource-state-metrics controller
+                      and related resources will be deployed.
+                    type: string
+                  rbac:
+                    description: RBAC configuration for the controller.
+                    properties:
+                      allowedAPIGroups:
+                        description: List of API groups the controller should have read access to (get/list/watch
+                          only). If not specified or empty, grants wildcard access to all API groups - suitable
+                          for development/testing. For production, specify only the API groups you need to monitor
+                          (e.g., ['apiextensions.crossplane.io', 'aws.upbound.io']).
+                        type: array
+                        items:
+                          type: string
+                    type: object
+                  service:
+                    description: Service configuration for exposing metrics endpoints.
+                    properties:
+                      metricsPort:
+                        description: Port for exposing resource metrics generated from custom
+                          resources. Defaults to 9999.
+                        type: number
+                      telemetryPort:
+                        description: Port for exposing controller telemetry metrics. Defaults
+                          to 9998.
+                        type: number
+                      type:
+                        description: Kubernetes Service type (ClusterIP, NodePort, or LoadBalancer).
+                          Defaults to ClusterIP.
+                        type: string
+                    type: object
+                type: object
+            type: object
+          status:
+            description: ResourceStateMetricsStatus defines the observed state of
+              ResourceStateMetrics.
+            type: object
+        required:
+        - spec
+        type: object
+    served: true

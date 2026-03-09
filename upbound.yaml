@@ -1,0 +1,34 @@
+apiVersion: meta.dev.upbound.io/v2alpha1
+kind: Project
+metadata:
+  name: resource-state-metrics
+spec:
+  dependsOn:
+  - apiVersion: pkg.crossplane.io/v1
+    kind: Function
+    package: xpkg.upbound.io/crossplane-contrib/function-auto-ready
+    version: '>=v0.0.0'
+  description: Crossplane package for deploying resource-state-metrics, a Kubernetes
+    controller that generates Prometheus metrics for custom resources
+  license: Apache-2.0
+  maintainer: Crossplane Contrib <info@crossplane.io>
+  readme: |
+    # Resource State Metrics
+
+    This Crossplane package deploys resource-state-metrics, a Kubernetes controller that builds on
+    Kube-State-Metrics' Custom Resource State ideology and generates metrics for custom resources
+    based on the configuration specified in ResourceMetricsMonitor resources.
+
+    ## Features
+
+    - Generates Prometheus metrics for any Kubernetes custom resource
+    - Configured via ResourceMetricsMonitor CRD
+    - Supports multiple metric types (Counter, Gauge, Histogram, Summary)
+    - Namespace-scoped configuration for multi-tenant environments
+
+    ## Usage
+
+    Deploy a ResourceStateMetrics claim to provision the controller and related infrastructure.
+    Then create ResourceMetricsMonitor resources to define which metrics to collect from your custom resources.
+  repository: ghcr.io/crossplane-contrib/resource-state-metrics
+  source: github.com/crossplane-contrib/resource-state-metrics

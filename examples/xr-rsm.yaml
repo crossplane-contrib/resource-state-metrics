@@ -1,0 +1,29 @@
+apiVersion: metrics.crossplane.io/v1alpha1
+kind: ResourceStateMetrics
+metadata:
+  name: rsm
+spec:
+  parameters:
+    namespace: resource-state-metrics
+    rbac:
+      allowedAPIGroups:
+        - apiextensions.crossplane.io
+        - metrics.crossplane.io
+        - pkg.crossplane.io
+        - aws.platform.upbound.io
+    deployment:
+      replicas: 1
+      image:
+        repository: xpkg.crossplane.io/crossplane-contrib/resource-state-metrics-server
+        tag: v0.0.1
+      resources:
+        limits:
+          cpu: 200m
+          memory: 256Mi
+        requests:
+          cpu: 100m
+          memory: 128Mi
+    service:
+      telemetryPort: 9998
+      metricsPort: 9999
+      type: ClusterIP

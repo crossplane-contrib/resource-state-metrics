@@ -1,0 +1,42 @@
+# Example: Track XR Sync Status and Errors
+# Use Case: Troubleshooting - identify EKS clusters with sync failures and why
+# Resolver: CEL (Common Expression Language)
+#
+# Metrics Generated:
+# - eks_synced (gauge): 1=synced, 0=not synced
+#
+# PromQL Queries:
+# - Group sync failures by reason: sum by (sync_reason) (eks_synced == 0)
+# - Alert on ReconcileError: eks_synced{sync_reason="ReconcileError"} == 0
+# - Check specific cluster: eks_synced{name="configuration-aws-eks"}
+#
+# Target XR:
+#   apiVersion: aws.platform.upbound.io/v1alpha1
+#   kind: EKS
+
+apiVersion: resource-state-metrics.instrumentation.k8s-sigs.io/v1alpha1
+kind: ResourceMetricsMonitor
+metadata:
+  name: xr-sync-status
+  namespace: resource-state-metrics
+spec:
+  configuration:
+    stores:
+      - group: "aws.platform.upbound.io"
+        version: "v1alpha1"
+        kind: "EKS"
+        resource: "eks"
+        resolver: "cel"
+        families:
+          - name: "eks_synced"
+            help: "Synced status of Crossplane XRs (1=synced, 0=not synced)"
+            metrics:
+              - labels:
+                  - name: "region"
+                    value: "o.spec.parameters.region != null ? o.spec.parameters.region : 'unknown'"
+                  - name: "sync_reason"
+                    # Extract the reason from the Synced condition
+                    value: |
+                      o.status.conditions.exists(c, c.type == 'Synced') ?
+                        o.status.conditions.filter(c, c.type == 'Synced')[0].reason : 'Unknown'
+                value: "o.status.conditions.exists(c, c.type == 'Synced' && c.status == 'True') ? 1 : 0"

@@ -1,0 +1,73 @@
+# code: language=yaml
+# yaml-language-server: $schema=../../.up/json/models/index.schema.json
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: resource-state-metrics
+  namespace: {{ $xr.spec.parameters.namespace }}
+  annotations:
+    {{ setResourceNameAnnotation "deployment" }}
+  labels:
+    app.kubernetes.io/component: exporter
+    app.kubernetes.io/name: resource-state-metrics
+    app.kubernetes.io/version: 0.0.1
+spec:
+  replicas: {{ $xr.spec.parameters.deployment.replicas }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: resource-state-metrics
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/component: exporter
+        app.kubernetes.io/name: resource-state-metrics
+        app.kubernetes.io/version: 0.0.1
+    spec:
+      automountServiceAccountToken: true
+      serviceAccountName: resource-state-metrics
+      nodeSelector:
+        kubernetes.io/os: linux
+      containers:
+      - name: resource-state-metrics
+        image: {{ $xr.spec.parameters.deployment.image.repository }}:{{ $xr.spec.parameters.deployment.image.tag }}
+        args:
+        - --main-host=0.0.0.0
+        - --main-port={{ $xr.spec.parameters.service.metricsPort }}
+        - --self-host=0.0.0.0
+        - --self-port={{ $xr.spec.parameters.service.telemetryPort }}
+        ports:
+        - name: http-metrics
+          containerPort: {{ $xr.spec.parameters.service.metricsPort }}
+        - name: telemetry
+          containerPort: {{ $xr.spec.parameters.service.telemetryPort }}
+        livenessProbe:
+          httpGet:
+            path: /livez
+            port: http-metrics
+          initialDelaySeconds: 5
+          timeoutSeconds: 5
+        readinessProbe:
+          httpGet:
+            path: /readyz
+            port: telemetry
+          initialDelaySeconds: 5
+          timeoutSeconds: 5
+        resources:
+          limits:
+            cpu: {{ $xr.spec.parameters.deployment.resources.limits.cpu }}
+            memory: {{ $xr.spec.parameters.deployment.resources.limits.memory }}
+          requests:
+            cpu: {{ $xr.spec.parameters.deployment.resources.requests.cpu }}
+            memory: {{ $xr.spec.parameters.deployment.resources.requests.memory }}
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+          readOnlyRootFilesystem: true
+          runAsNonRoot: true
+          runAsUser: 65534
+          seccompProfile:
+            type: RuntimeDefault

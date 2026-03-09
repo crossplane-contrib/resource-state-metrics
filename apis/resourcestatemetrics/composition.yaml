@@ -1,0 +1,16 @@
+apiVersion: apiextensions.crossplane.io/v1
+kind: Composition
+metadata:
+  name: resourcestatemetrics.metrics.crossplane.io
+spec:
+  compositeTypeRef:
+    apiVersion: metrics.crossplane.io/v1alpha1
+    kind: ResourceStateMetrics
+  mode: Pipeline
+  pipeline:
+  - functionRef:
+      name: crossplane-contrib-resource-state-metricsrsm
+    step: rsm
+  - functionRef:
+      name: crossplane-contrib-function-auto-ready
+    step: crossplane-contrib-function-auto-ready

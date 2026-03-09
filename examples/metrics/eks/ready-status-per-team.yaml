@@ -1,0 +1,75 @@
+# Example: Per-Team Monitoring with Label Selectors and Namespace Isolation
+# Use Case: Teams own their own ResourceMetricsMonitors in their namespace
+# Resolver: CEL (Common Expression Language)
+#
+# Key Features:
+# 1. Label Selector: Only watches EKS clusters with team=team-a label
+# 2. Namespace Isolation: The RMM lives in the team-a namespace, not resource-state-metrics
+#    RSM watches ResourceMetricsMonitors across ALL namespaces, so teams can
+#    manage their own metric definitions independently.
+#
+# Multi-Tenancy Pattern:
+#   team-a namespace → RMM with selectors.label: "team=team-a"
+#   team-b namespace → RMM with selectors.label: "team=team-b"
+#   Each team only sees metrics for their own resources.
+#
+# Metrics Generated:
+# - eks_team_ready (gauge): 1=ready, 0=not ready (only for team-a resources)
+#
+# PromQL Queries:
+# - Not-ready team-a clusters: eks_team_ready{team="team-a"} == 0
+# - Team-a ready percentage: (sum(eks_team_ready{team="team-a"} == 1) / count(eks_team_ready{team="team-a"})) * 100
+#
+
+---
+apiVersion: resource-state-metrics.instrumentation.k8s-sigs.io/v1alpha1
+kind: ResourceMetricsMonitor
+metadata:
+  name: eks-ready-status
+  namespace: team-a
+spec:
+  configuration:
+    stores:
+      - group: "aws.platform.upbound.io"
+        version: "v1alpha1"
+        kind: "EKS"
+        resource: "eks"
+        resolver: "cel"
+        selectors:
+          label: "team=team-a"
+        families:
+          - name: "eks_team_ready"
+            help: "Ready status of Crossplane XRs per team (1=ready, 0=not ready)"
+            metrics:
+              - labels:
+                  - name: "team"
+                    value: "o.metadata.labels['team'] != null ? o.metadata.labels['team'] : 'unknown'"
+                  - name: "region"
+                    value: "o.spec.parameters.region != null ? o.spec.parameters.region : 'unknown'"
+                value: "o.status.conditions.exists(c, c.type == 'Ready' && c.status == 'True') ? 1 : 0"
+---
+apiVersion: resource-state-metrics.instrumentation.k8s-sigs.io/v1alpha1
+kind: ResourceMetricsMonitor
+metadata:
+  name: eks-ready-status
+  namespace: team-b
+spec:
+  configuration:
+    stores:
+      - group: "aws.platform.upbound.io"
+        version: "v1alpha1"
+        kind: "EKS"
+        resource: "eks"
+        resolver: "cel"
+        selectors:
+          label: "team=team-b"
+        families:
+          - name: "eks_team_ready"
+            help: "Ready status of Crossplane XRs per team (1=ready, 0=not ready)"
+            metrics:
+              - labels:
+                  - name: "team"
+                    value: "o.metadata.labels['team'] != null ? o.metadata.labels['team'] : 'unknown'"
+                  - name: "region"
+                    value: "o.spec.parameters.region != null ? o.spec.parameters.region : 'unknown'"
+                value: "o.status.conditions.exists(c, c.type == 'Ready' && c.status == 'True') ? 1 : 0"

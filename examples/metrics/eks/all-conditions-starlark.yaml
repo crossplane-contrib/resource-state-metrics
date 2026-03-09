@@ -1,0 +1,82 @@
+# Example: All Conditions per XR (Starlark Resolver)
+# Use Case: Track EACH condition type separately - demonstrates complex iteration
+# Resolver: Starlark (Python-like scripting)
+#
+# Why Starlark?
+# - Iterate over the status.conditions[] array
+# - Generate one metric sample PER condition type dynamically
+# - More flexible than CEL for complex logic
+#
+# Metrics Generated:
+# - eks_condition_status (gauge): 1=True, 0=False, -1=Unknown
+#   - One metric per condition type (Ready, Synced, etc.)
+#
+# PromQL Queries:
+# - Not synced XRs: eks_condition_status{condition_type="Synced"} == 0
+# - Not ready XRs: eks_condition_status{condition_type="Ready"} == 0
+# - Unknown conditions: eks_condition_status == -1
+# - Count by condition type: sum by (condition_type) (eks_condition_status == 1)
+#
+# Target XR:
+#   apiVersion: aws.platform.upbound.io/v1alpha1
+#   kind: EKS
+
+apiVersion: resource-state-metrics.instrumentation.k8s-sigs.io/v1alpha1
+kind: ResourceMetricsMonitor
+metadata:
+  name: xr-all-conditions
+  namespace: resource-state-metrics
+spec:
+  configuration:
+    stores:
+      - group: "aws.platform.upbound.io"
+        version: "v1alpha1"
+        kind: "EKS"
+        resource: "eks"
+        families:
+          - name: "eks_condition_status"
+            help: "Status of each condition type for XRs (1=True, 0=False, -1=Unknown)"
+            resolver: starlark
+            starlark:
+              script: |
+                def generate():
+                    samples = []
+
+                    # Extract XR spec parameters for labels
+                    region = obj.get("spec", {}).get("parameters", {}).get("region", "unknown")
+
+                    # Iterate over all conditions
+                    conditions = obj.get("status", {}).get("conditions", [])
+
+                    for condition in conditions:
+                        cond_type = condition.get("type", "unknown")
+                        status = condition.get("status", "Unknown")
+
+                        # Map status to numeric value: True=1, False=0, Unknown=-1
+                        if status == "True":
+                            value = 1.0
+                        elif status == "False":
+                            value = 0.0
+                        else:
+                            value = -1.0
+
+                        # Create metric sample with condition type as label
+                        samples.append(metric(
+                            labels={
+                                "region": region,
+                                "condition_type": cond_type
+                            },
+                            value=value
+                        ))
+
+                    return samples
+
+                # Generate family with all condition samples
+                families = [
+                    family(
+                        name="eks_condition_status",
+                        help="Status of each condition type for XRs (1=True, 0=False, -1=Unknown)",
+                        kind="gauge",
+                        samples=generate()
+                    )
+                ]

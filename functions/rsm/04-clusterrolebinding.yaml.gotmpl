@@ -1,0 +1,23 @@
+# code: language=yaml
+# yaml-language-server: $schema=../../.up/json/models/index.schema.json
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: resource-state-metrics
+  annotations:
+    {{ setResourceNameAnnotation "clusterrolebinding" }}
+    gotemplating.fn.crossplane.io/ready: "True"
+  labels:
+    app.kubernetes.io/component: exporter
+    app.kubernetes.io/name: resource-state-metrics
+    app.kubernetes.io/version: 0.0.1
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: resource-state-metrics
+subjects:
+- kind: ServiceAccount
+  name: resource-state-metrics
+  namespace: {{ $xr.spec.parameters.namespace }}

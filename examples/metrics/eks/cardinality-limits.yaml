@@ -1,0 +1,62 @@
+# Example: Cardinality Limits
+# Use Case: Protect Prometheus from metric explosion when monitoring high-cardinality resources
+# Resolver: CEL (Common Expression Language)
+#
+# Why Cardinality Limits?
+# - Prevents unbounded metric growth when resources have many label combinations
+# - Limits can be set at store level (all families) and/or family level (per family)
+# - Warning threshold at 80% of limit triggers CardinalityWarning condition
+# - Exceeding 100% triggers CardinalityCutoff - the family is dropped entirely
+# - Status conditions reflect cardinality health for alerting
+#
+# Cardinality Hierarchy:
+# - Store cardinalityLimit: caps total samples across ALL families in the store
+# - Family cardinalityLimit: caps samples for THAT specific family
+# - Both can be set - whichever is hit first takes effect
+#
+# Metrics Generated:
+# - eks_ready_limited (gauge): Ready status with cardinality protection
+# - eks_synced_limited (gauge): Synced status with cardinality protection
+#
+# PromQL Queries:
+# - Same as regular ready/synced queries, but with cardinality safety
+# - Monitor cardinality health via RMM status conditions
+#
+# Target XR:
+#   apiVersion: aws.platform.upbound.io/v1alpha1
+#   kind: EKS
+
+apiVersion: resource-state-metrics.instrumentation.k8s-sigs.io/v1alpha1
+kind: ResourceMetricsMonitor
+metadata:
+  name: xr-cardinality-limits
+  namespace: resource-state-metrics
+spec:
+  configuration:
+    stores:
+      - group: "aws.platform.upbound.io"
+        version: "v1alpha1"
+        kind: "EKS"
+        resource: "eks"
+        resolver: "cel"
+        # Store-level limit: max 1000 total samples across all families
+        cardinalityLimit: 1000
+        families:
+          - name: "eks_ready_limited"
+            help: "Ready status of XRs with cardinality protection"
+            # Family-level limit: max 500 samples for this family alone
+            cardinalityLimit: 500
+            metrics:
+              - labels:
+                  - name: "region"
+                    value: "o.spec.parameters.region != null ? o.spec.parameters.region : 'unknown'"
+                value: "o.status.conditions.exists(c, c.type == 'Ready' && c.status == 'True') ? 1 : 0"
+          - name: "eks_synced_limited"
+            help: "Synced status of XRs with cardinality protection"
+            # Family-level limit: max 500 samples for this family alone
+            cardinalityLimit: 500
+            metrics:
+              - labels:
+                  - name: "region"
+                    value: "o.spec.parameters.region != null ? o.spec.parameters.region : 'unknown'"
+                value: "o.status.conditions.exists(c, c.type == 'Synced' && c.status == 'True') ? 1 : 0"

@@ -1,0 +1,52 @@
+# Example: Track XR Responsive Status (Circuit Breaker)
+# Use Case: Detect XRs experiencing reconciliation thrashing - circuit breaker is open
+# Resolver: CEL (Common Expression Language)
+#
+# Background:
+# Crossplane's circuit breaker prevents reconciliation thrashing by rate-limiting
+# watch events per XR. When triggered, the Responsive condition transitions to False.
+# This metric exposes that state for alerting and dashboards.
+#
+# Metrics Generated:
+# - eks_responsive (gauge): 1=responsive (circuit closed), 0=not responsive (circuit open)
+#
+# PromQL Queries:
+# - XRs with open circuit breaker: eks_responsive == 0
+# - Alert on throttled XRs: eks_responsive{name="production-eks"} == 0
+# - Responsive percentage: (sum(eks_responsive == 1) / count(eks_responsive)) * 100
+# - Throttled XRs by region: sum by (region) (eks_responsive == 0)
+#
+# Related Crossplane Core Metrics:
+# - circuit_breaker_opens_total: count of closed→open transitions
+# - circuit_breaker_closes_total: count of open→closed transitions
+# - circuit_breaker_events_total: watch events by outcome (allowed/dropped/halfopen_allowed)
+#
+# Target XR:
+#   apiVersion: aws.platform.upbound.io/v1alpha1
+#   kind: EKS
+
+apiVersion: resource-state-metrics.instrumentation.k8s-sigs.io/v1alpha1
+kind: ResourceMetricsMonitor
+metadata:
+  name: xr-responsive-status
+  namespace: resource-state-metrics
+spec:
+  configuration:
+    stores:
+      - group: "aws.platform.upbound.io"
+        version: "v1alpha1"
+        kind: "EKS"
+        resource: "eks"
+        resolver: "cel"
+        families:
+          - name: "eks_responsive"
+            help: "Responsive status of Crossplane XRs - circuit breaker state (1=closed/responsive, 0=open/throttled)"
+            metrics:
+              - labels:
+                  - name: "region"
+                    value: "o.spec.parameters.region != null ? o.spec.parameters.region : 'unknown'"
+                  - name: "responsive_reason"
+                    value: |
+                      o.status.conditions.exists(c, c.type == 'Responsive') ?
+                        o.status.conditions.filter(c, c.type == 'Responsive')[0].reason : 'Unknown'
+                value: "o.status.conditions.exists(c, c.type == 'Responsive' && c.status == 'True') ? 1 : 0"

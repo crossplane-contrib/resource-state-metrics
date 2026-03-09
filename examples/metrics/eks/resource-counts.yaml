@@ -1,0 +1,42 @@
+# Example: Track Composite Resource Counts
+# Use Case: Capacity planning - understand how many managed resources each EKS cluster composes
+# Resolver: CEL (Common Expression Language)
+#
+# Metrics Generated:
+# - eks_resource_count (gauge): Number of managed resources in each XR
+#
+# PromQL Queries:
+# - Total managed resources: sum(eks_resource_count)
+# - Resources per cluster: eks_resource_count
+# - Largest clusters: topk(10, eks_resource_count)
+#
+# NOTE: This is a gauge (not a counter) because resource counts can go up AND down
+# as resources are created or deleted. In RSM, names ending with _total are
+# automatically treated as counters - avoid _total suffix for non-monotonic values.
+#
+# Target XR:
+#   apiVersion: aws.platform.upbound.io/v1alpha1
+#   kind: EKS
+
+apiVersion: resource-state-metrics.instrumentation.k8s-sigs.io/v1alpha1
+kind: ResourceMetricsMonitor
+metadata:
+  name: xr-resource-counts
+  namespace: resource-state-metrics
+spec:
+  configuration:
+    stores:
+      - group: "aws.platform.upbound.io"
+        version: "v1alpha1"
+        kind: "EKS"
+        resource: "eks"
+        resolver: "cel"
+        families:
+          - name: "eks_resource_count"
+            help: "Number of managed resources in each XR"
+            metrics:
+              - labels:
+                  - name: "region"
+                    value: "has(o.spec.parameters.region) ? o.spec.parameters.region : 'unknown'"
+                # Count resourceRefs in spec.crossplane
+                value: "has(o.spec.crossplane.resourceRefs) ? double(o.spec.crossplane.resourceRefs.size()) : 0.0"
