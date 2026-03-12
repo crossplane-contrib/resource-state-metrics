@@ -10,14 +10,14 @@ tests:
   - interval: 1m
     input_series:
       # configuration_healthy
-      - series: 'kube_customresource_configuration_healthy{package="xpkg.crossplane.io/crossplane-contrib/resource-state-metrics:v0.0.1",revision="crossplane-contrib-resource-state-metrics-8847f6d80319",group="pkg.crossplane.io",version="v1",kind="Configuration",name="crossplane-contrib-resource-state-metrics",namespace=""}'
+      - series: 'kube_customresource_configuration_healthy{package="xpkg.crossplane.io/crossplane-contrib/resource-state-metrics:v0.2.0",revision="crossplane-contrib-resource-state-metrics-8847f6d80319",group="pkg.crossplane.io",version="v1",kind="Configuration",name="crossplane-contrib-resource-state-metrics",namespace=""}'
         values: "1"
       - series: 'kube_customresource_configuration_healthy{package="xpkg.upbound.io/upbound/configuration-aws-eks:v2.0.1",revision="upbound-configuration-aws-eks-b2b933b18db8",group="pkg.crossplane.io",version="v1",kind="Configuration",name="upbound-configuration-aws-eks",namespace=""}'
         values: "1"
       - series: 'kube_customresource_configuration_healthy{package="xpkg.upbound.io/upbound/configuration-aws-network:v2.0.0",revision="upbound-configuration-aws-network-b41f9c196826",group="pkg.crossplane.io",version="v1",kind="Configuration",name="upbound-configuration-aws-network",namespace=""}'
         values: "1"
       # configuration_installed
-      - series: 'kube_customresource_configuration_installed{package="xpkg.crossplane.io/crossplane-contrib/resource-state-metrics:v0.0.1",group="pkg.crossplane.io",version="v1",kind="Configuration",name="crossplane-contrib-resource-state-metrics",namespace=""}'
+      - series: 'kube_customresource_configuration_installed{package="xpkg.crossplane.io/crossplane-contrib/resource-state-metrics:v0.2.0",group="pkg.crossplane.io",version="v1",kind="Configuration",name="crossplane-contrib-resource-state-metrics",namespace=""}'
         values: "1"
       - series: 'kube_customresource_configuration_installed{package="xpkg.upbound.io/upbound/configuration-aws-eks:v2.0.1",group="pkg.crossplane.io",version="v1",kind="Configuration",name="upbound-configuration-aws-eks",namespace=""}'
         values: "1"
@@ -34,7 +34,7 @@ tests:
       - expr: kube_customresource_configuration_healthy{name="crossplane-contrib-resource-state-metrics"} == 1
         eval_time: 0m
         exp_samples:
-          - labels: 'kube_customresource_configuration_healthy{package="xpkg.crossplane.io/crossplane-contrib/resource-state-metrics:v0.0.1",revision="crossplane-contrib-resource-state-metrics-8847f6d80319",group="pkg.crossplane.io",version="v1",kind="Configuration",name="crossplane-contrib-resource-state-metrics",namespace=""}'
+          - labels: 'kube_customresource_configuration_healthy{package="xpkg.crossplane.io/crossplane-contrib/resource-state-metrics:v0.2.0",revision="crossplane-contrib-resource-state-metrics-8847f6d80319",group="pkg.crossplane.io",version="v1",kind="Configuration",name="crossplane-contrib-resource-state-metrics",namespace=""}'
             value: 1
 
       # Configuration health percentage (100%)

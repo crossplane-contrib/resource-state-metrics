@@ -56,8 +56,8 @@ spec:
       allowedAPIGroups:
         - apiextensions.crossplane.io
         - metrics.crossplane.io
-        - pkg.crossplane.io           # Provider, Configuration, Function
-        - aws.platform.upbound.io     # EKS XRs
+        - pkg.crossplane.io
+        - aws.platform.upbound.io
 
       # Development: wildcard access to all API groups
       # allowedAPIGroups: []

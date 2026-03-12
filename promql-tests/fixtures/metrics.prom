@@ -112,12 +112,12 @@ kube_customresource_eks_mr_cluster_ready{region="us-east-1",group="eks.aws.m.upb
 kube_customresource_eks_team_ready{region="us-east-1",team="team-b",group="aws.platform.upbound.io",version="v1alpha1",kind="EKS",name="dev-eks",namespace="team-b"} 0.000000
 # HELP kube_customresource_configuration_healthy Health status of Crossplane configurations (1=healthy, 0=unhealthy)
 # TYPE kube_customresource_configuration_healthy gauge
-kube_customresource_configuration_healthy{package="xpkg.crossplane.io/crossplane-contrib/resource-state-metrics:v0.0.1",revision="crossplane-contrib-resource-state-metrics-8847f6d80319",group="pkg.crossplane.io",version="v1",kind="Configuration",name="crossplane-contrib-resource-state-metrics",namespace=""} 1.000000
+kube_customresource_configuration_healthy{package="xpkg.crossplane.io/crossplane-contrib/resource-state-metrics:v0.2.0",revision="crossplane-contrib-resource-state-metrics-8847f6d80319",group="pkg.crossplane.io",version="v1",kind="Configuration",name="crossplane-contrib-resource-state-metrics",namespace=""} 1.000000
 kube_customresource_configuration_healthy{package="xpkg.upbound.io/upbound/configuration-aws-eks:v2.0.1",revision="upbound-configuration-aws-eks-b2b933b18db8",group="pkg.crossplane.io",version="v1",kind="Configuration",name="upbound-configuration-aws-eks",namespace=""} 1.000000
 kube_customresource_configuration_healthy{package="xpkg.upbound.io/upbound/configuration-aws-network:v2.0.0",revision="upbound-configuration-aws-network-b41f9c196826",group="pkg.crossplane.io",version="v1",kind="Configuration",name="upbound-configuration-aws-network",namespace=""} 1.000000
 # HELP kube_customresource_configuration_installed Installed status of Crossplane configurations (1=installed, 0=not installed)
 # TYPE kube_customresource_configuration_installed gauge
-kube_customresource_configuration_installed{package="xpkg.crossplane.io/crossplane-contrib/resource-state-metrics:v0.0.1",group="pkg.crossplane.io",version="v1",kind="Configuration",name="crossplane-contrib-resource-state-metrics",namespace=""} 1.000000
+kube_customresource_configuration_installed{package="xpkg.crossplane.io/crossplane-contrib/resource-state-metrics:v0.2.0",group="pkg.crossplane.io",version="v1",kind="Configuration",name="crossplane-contrib-resource-state-metrics",namespace=""} 1.000000
 kube_customresource_configuration_installed{package="xpkg.upbound.io/upbound/configuration-aws-eks:v2.0.1",group="pkg.crossplane.io",version="v1",kind="Configuration",name="upbound-configuration-aws-eks",namespace=""} 1.000000
 kube_customresource_configuration_installed{package="xpkg.upbound.io/upbound/configuration-aws-network:v2.0.0",group="pkg.crossplane.io",version="v1",kind="Configuration",name="upbound-configuration-aws-network",namespace=""} 1.000000
 # HELP kube_customresource_eks_responsive Responsive status of Crossplane XRs - circuit breaker state (1=closed/responsive, 0=open/throttled)
