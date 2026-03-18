@@ -75,8 +75,10 @@ spec:
                     description: Stores defines the resources to watch and the metrics
                       to generate.
                     items:
-                      description: Store defines how to generate metrics for a specific
-                        resource type.
+                      description: |-
+                        Store defines how to generate metrics for a specific resource type.
+                        GVK fields support wildcards ("*") to match multiple resources via API discovery.
+                        When using wildcards, the controller will auto-discover matching resources.
                       properties:
                         cardinalityLimit:
                           description: CardinalityLimit sets the maximum cardinality
@@ -224,12 +226,14 @@ spec:
                           minItems: 1
                           type: array
                         group:
-                          description: Group is the API group of the resource (empty
-                            string for core resources).
+                          description: |-
+                            Group is the API group of the resource (empty string for core resources).
+                            Supports "*" to match all groups.
                           type: string
                         kind:
-                          description: Kind is the kind of the resource.
-                          minLength: 1
+                          description: |-
+                            Kind is the kind of the resource.
+                            Supports "*" to match all kinds within the specified group/version.
                           type: string
                         labels:
                           description: Labels defines additional labels to apply to
@@ -264,8 +268,8 @@ spec:
                           - ""
                           type: string
                         resource:
-                          description: Resource is the plural resource name.
-                          minLength: 1
+                          description: Resource is the plural resource name (e.g.
+                            "deployments", "pods").
                           type: string
                         selectors:
                           description: Selectors defines how to filter the resources
@@ -282,13 +286,10 @@ spec:
                           type: object
                         version:
                           description: Version is the API version of the resource.
-                          minLength: 1
+                            Supports "*" to match all versions.
                           type: string
                       required:
                       - families
-                      - kind
-                      - resource
-                      - version
                       type: object
                     minItems: 1
                     type: array

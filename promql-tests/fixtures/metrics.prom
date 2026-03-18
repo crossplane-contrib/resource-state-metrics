@@ -1,65 +1,13 @@
-# HELP kube_customresource_eks_resource_count Number of managed resources in each XR
-# TYPE kube_customresource_eks_resource_count gauge
-kube_customresource_eks_resource_count{region="us-east-1",group="aws.platform.upbound.io",version="v1alpha1",kind="EKS",name="dev-eks",namespace="team-b"} 7.000000
-kube_customresource_eks_resource_count{region="us-west-2",group="aws.platform.upbound.io",version="v1alpha1",kind="EKS",name="production-eks",namespace="team-a"} 7.000000
-kube_customresource_eks_resource_count{region="eu-west-1",group="aws.platform.upbound.io",version="v1alpha1",kind="EKS",name="staging-eks",namespace="team-a"} 7.000000
-# HELP kube_customresource_function_healthy Health status of Crossplane functions (1=healthy, 0=unhealthy)
-# TYPE kube_customresource_function_healthy gauge
-kube_customresource_function_healthy{package="xpkg.upbound.io/crossplane-contrib/function-auto-ready:v0.6.1",revision="crossplane-contrib-function-auto-ready-1a91c1ec8733",group="pkg.crossplane.io",version="v1",kind="Function",name="crossplane-contrib-function-auto-ready",namespace=""} 1.000000
-kube_customresource_function_healthy{package="ghcr.io/crossplane-contrib/resource-state-metrics_rsm@sha256:c2020a64da667d407474e013b4a8afdddb72a07b8fc0ccbd5ab781cacc37f0a6",revision="crossplane-contrib-resource-state-metricsrsm-c2020a64da66",group="pkg.crossplane.io",version="v1",kind="Function",name="crossplane-contrib-resource-state-metricsrsm",namespace=""} 1.000000
-kube_customresource_function_healthy{package="xpkg.upbound.io/upbound/configuration-aws-eks_eks@sha256:938a50a6b01808daaa4dcb2dbda3fe1d7bd38e2d3cfb0f06c50468f894aa12d1",revision="upbound-configuration-aws-ekseks-938a50a6b018",group="pkg.crossplane.io",version="v1",kind="Function",name="upbound-configuration-aws-ekseks",namespace=""} 1.000000
-kube_customresource_function_healthy{package="xpkg.upbound.io/upbound/configuration-aws-network_network@sha256:58e560624a2cb9eb054782751ad6604e6365e0e53a3aec1965be0c0dfecdd082",revision="upbound-configuration-aws-networknetwork-58e560624a2c",group="pkg.crossplane.io",version="v1",kind="Function",name="upbound-configuration-aws-networknetwork",namespace=""} 1.000000
-# HELP kube_customresource_function_installed Installed status of Crossplane functions (1=installed, 0=not installed)
-# TYPE kube_customresource_function_installed gauge
-kube_customresource_function_installed{package="xpkg.upbound.io/crossplane-contrib/function-auto-ready:v0.6.1",group="pkg.crossplane.io",version="v1",kind="Function",name="crossplane-contrib-function-auto-ready",namespace=""} 1.000000
-kube_customresource_function_installed{package="ghcr.io/crossplane-contrib/resource-state-metrics_rsm@sha256:c2020a64da667d407474e013b4a8afdddb72a07b8fc0ccbd5ab781cacc37f0a6",group="pkg.crossplane.io",version="v1",kind="Function",name="crossplane-contrib-resource-state-metricsrsm",namespace=""} 1.000000
-kube_customresource_function_installed{package="xpkg.upbound.io/upbound/configuration-aws-eks_eks@sha256:938a50a6b01808daaa4dcb2dbda3fe1d7bd38e2d3cfb0f06c50468f894aa12d1",group="pkg.crossplane.io",version="v1",kind="Function",name="upbound-configuration-aws-ekseks",namespace=""} 1.000000
-kube_customresource_function_installed{package="xpkg.upbound.io/upbound/configuration-aws-network_network@sha256:58e560624a2cb9eb054782751ad6604e6365e0e53a3aec1965be0c0dfecdd082",group="pkg.crossplane.io",version="v1",kind="Function",name="upbound-configuration-aws-networknetwork",namespace=""} 1.000000
-# HELP kube_customresource_eks_team_ready Ready status of Crossplane XRs per team (1=ready, 0=not ready)
-# TYPE kube_customresource_eks_team_ready gauge
-kube_customresource_eks_team_ready{region="eu-west-1",team="team-a",group="aws.platform.upbound.io",version="v1alpha1",kind="EKS",name="staging-eks",namespace="team-a"} 0.000000
-kube_customresource_eks_team_ready{region="us-west-2",team="team-a",group="aws.platform.upbound.io",version="v1alpha1",kind="EKS",name="production-eks",namespace="team-a"} 0.000000
-# HELP kube_customresource_eks_mr_cluster_info Information about EKS Cluster managed resources with parent correlation (always 1)
-# TYPE kube_customresource_eks_mr_cluster_info gauge
-kube_customresource_eks_mr_cluster_info{composite="production-eks",composition_resource="kubernetesCluster",external_name="production-eks-fc662e179f20",region="us-west-2",group="eks.aws.m.upbound.io",version="v1beta1",kind="Cluster",name="production-eks-fc662e179f20",namespace="team-a"} 1.000000
-kube_customresource_eks_mr_cluster_info{composite="staging-eks",composition_resource="kubernetesCluster",external_name="staging-eks-cf5379ecb464",region="eu-west-1",group="eks.aws.m.upbound.io",version="v1beta1",kind="Cluster",name="staging-eks-cf5379ecb464",namespace="team-a"} 1.000000
-kube_customresource_eks_mr_cluster_info{composite="dev-eks",composition_resource="kubernetesCluster",external_name="dev-eks-c783272e5597",region="us-east-1",group="eks.aws.m.upbound.io",version="v1beta1",kind="Cluster",name="dev-eks-c783272e5597",namespace="team-b"} 1.000000
-# HELP kube_customresource_eks_ready Ready status of Crossplane XRs (1=ready, 0=not ready)
-# TYPE kube_customresource_eks_ready gauge
-kube_customresource_eks_ready{region="us-west-2",group="aws.platform.upbound.io",version="v1alpha1",kind="EKS",name="production-eks",namespace="team-a"} 0.000000
-kube_customresource_eks_ready{region="eu-west-1",group="aws.platform.upbound.io",version="v1alpha1",kind="EKS",name="staging-eks",namespace="team-a"} 0.000000
-kube_customresource_eks_ready{region="us-east-1",group="aws.platform.upbound.io",version="v1alpha1",kind="EKS",name="dev-eks",namespace="team-b"} 0.000000
-# HELP kube_customresource_eks_info Information about Crossplane XR configuration (always 1)
-# TYPE kube_customresource_eks_info gauge
-kube_customresource_eks_info{id="production-eks",instance_type="m5.xlarge",node_count="3",region="us-west-2",group="aws.platform.upbound.io",version="v1alpha1",kind="EKS",name="production-eks",namespace="team-a"} 1.000000
-kube_customresource_eks_info{id="staging-eks",instance_type="t3.medium",node_count="2",region="eu-west-1",group="aws.platform.upbound.io",version="v1alpha1",kind="EKS",name="staging-eks",namespace="team-a"} 1.000000
-kube_customresource_eks_info{id="dev-eks",instance_type="t3.small",node_count="1",region="us-east-1",group="aws.platform.upbound.io",version="v1alpha1",kind="EKS",name="dev-eks",namespace="team-b"} 1.000000
-# HELP kube_customresource_provider_healthy Health status of Crossplane providers (1=healthy, 0=unhealthy)
-# TYPE kube_customresource_provider_healthy gauge
-kube_customresource_provider_healthy{package="xpkg.upbound.io/upbound/provider-helm:v1.2.0",revision="upbound-provider-helm-4e2bada791af",group="pkg.crossplane.io",version="v1",kind="Provider",name="upbound-provider-helm",namespace=""} 1.000000
-kube_customresource_provider_healthy{package="xpkg.upbound.io/upbound/provider-kubernetes:v1.2.1",revision="upbound-provider-kubernetes-87e2ce59b20b",group="pkg.crossplane.io",version="v1",kind="Provider",name="upbound-provider-kubernetes",namespace=""} 1.000000
-kube_customresource_provider_healthy{package="xpkg.upbound.io/upbound/provider-aws-eks:v2.4.0",revision="upbound-provider-aws-eks-04932354844f",group="pkg.crossplane.io",version="v1",kind="Provider",name="upbound-provider-aws-eks",namespace=""} 1.000000
-kube_customresource_provider_healthy{package="xpkg.upbound.io/upbound/provider-aws-iam:v2.4.0",revision="upbound-provider-aws-iam-080e40737a30",group="pkg.crossplane.io",version="v1",kind="Provider",name="upbound-provider-aws-iam",namespace=""} 1.000000
-kube_customresource_provider_healthy{package="xpkg.upbound.io/upbound/provider-aws-ec2:v2.4.0",revision="upbound-provider-aws-ec2-2b7b5e81da49",group="pkg.crossplane.io",version="v1",kind="Provider",name="upbound-provider-aws-ec2",namespace=""} 1.000000
-kube_customresource_provider_healthy{package="xpkg.upbound.io/upbound/provider-family-aws:v2.4.0",revision="upbound-provider-family-aws-9dca2646e322",group="pkg.crossplane.io",version="v1",kind="Provider",name="upbound-provider-family-aws",namespace=""} 1.000000
-# HELP kube_customresource_provider_installed Installed status of Crossplane providers (1=installed, 0=not installed)
-# TYPE kube_customresource_provider_installed gauge
-kube_customresource_provider_installed{package="xpkg.upbound.io/upbound/provider-helm:v1.2.0",group="pkg.crossplane.io",version="v1",kind="Provider",name="upbound-provider-helm",namespace=""} 1.000000
-kube_customresource_provider_installed{package="xpkg.upbound.io/upbound/provider-kubernetes:v1.2.1",group="pkg.crossplane.io",version="v1",kind="Provider",name="upbound-provider-kubernetes",namespace=""} 1.000000
-kube_customresource_provider_installed{package="xpkg.upbound.io/upbound/provider-aws-eks:v2.4.0",group="pkg.crossplane.io",version="v1",kind="Provider",name="upbound-provider-aws-eks",namespace=""} 1.000000
-kube_customresource_provider_installed{package="xpkg.upbound.io/upbound/provider-aws-iam:v2.4.0",group="pkg.crossplane.io",version="v1",kind="Provider",name="upbound-provider-aws-iam",namespace=""} 1.000000
-kube_customresource_provider_installed{package="xpkg.upbound.io/upbound/provider-aws-ec2:v2.4.0",group="pkg.crossplane.io",version="v1",kind="Provider",name="upbound-provider-aws-ec2",namespace=""} 1.000000
-kube_customresource_provider_installed{package="xpkg.upbound.io/upbound/provider-family-aws:v2.4.0",group="pkg.crossplane.io",version="v1",kind="Provider",name="upbound-provider-family-aws",namespace=""} 1.000000
-# HELP kube_customresource_eks_ready_limited Ready status of XRs with cardinality protection
-# TYPE kube_customresource_eks_ready_limited gauge
-kube_customresource_eks_ready_limited{region="us-west-2",group="aws.platform.upbound.io",version="v1alpha1",kind="EKS",name="production-eks",namespace="team-a"} 0.000000
-kube_customresource_eks_ready_limited{region="eu-west-1",group="aws.platform.upbound.io",version="v1alpha1",kind="EKS",name="staging-eks",namespace="team-a"} 0.000000
-kube_customresource_eks_ready_limited{region="us-east-1",group="aws.platform.upbound.io",version="v1alpha1",kind="EKS",name="dev-eks",namespace="team-b"} 0.000000
-# HELP kube_customresource_eks_synced_limited Synced status of XRs with cardinality protection
-# TYPE kube_customresource_eks_synced_limited gauge
-kube_customresource_eks_synced_limited{region="us-west-2",group="aws.platform.upbound.io",version="v1alpha1",kind="EKS",name="production-eks",namespace="team-a"} 1.000000
-kube_customresource_eks_synced_limited{region="eu-west-1",group="aws.platform.upbound.io",version="v1alpha1",kind="EKS",name="staging-eks",namespace="team-a"} 1.000000
-kube_customresource_eks_synced_limited{region="us-east-1",group="aws.platform.upbound.io",version="v1alpha1",kind="EKS",name="dev-eks",namespace="team-b"} 1.000000
+# HELP kube_customresource_eks_node_info EKS cluster node configuration
+# TYPE kube_customresource_eks_node_info gauge
+kube_customresource_eks_node_info{info="node_count",instance_type="m5.xlarge",region="us-west-2",group="aws.platform.upbound.io",version="v1alpha1",kind="EKS",name="production-eks",namespace="team-a"} 3.000000
+kube_customresource_eks_node_info{info="node_count",instance_type="t3.medium",region="eu-west-1",group="aws.platform.upbound.io",version="v1alpha1",kind="EKS",name="staging-eks",namespace="team-a"} 2.000000
+kube_customresource_eks_node_info{info="node_count",instance_type="t3.small",region="us-east-1",group="aws.platform.upbound.io",version="v1alpha1",kind="EKS",name="dev-eks",namespace="team-b"} 1.000000
+# HELP kube_customresource_eks_ready_last_transition_timestamp Unix timestamp when XR Ready condition last transitioned
+# TYPE kube_customresource_eks_ready_last_transition_timestamp gauge
+kube_customresource_eks_ready_last_transition_timestamp{ready_status="False",region="us-east-1",group="aws.platform.upbound.io",version="v1alpha1",kind="EKS",name="dev-eks",namespace="team-b"} 1773863408.000000
+kube_customresource_eks_ready_last_transition_timestamp{ready_status="False",region="us-west-2",group="aws.platform.upbound.io",version="v1alpha1",kind="EKS",name="production-eks",namespace="team-a"} 1773863408.000000
+kube_customresource_eks_ready_last_transition_timestamp{ready_status="False",region="eu-west-1",group="aws.platform.upbound.io",version="v1alpha1",kind="EKS",name="staging-eks",namespace="team-a"} 1773863408.000000
 # HELP kube_customresource_eks_condition_status Status of each condition type for XRs (1=True, 0=False, -1=Unknown)
 # TYPE kube_customresource_eks_condition_status gauge
 kube_customresource_eks_condition_status{condition_type="Synced",region="us-west-2",group="aws.platform.upbound.io",version="v1alpha1",kind="EKS",name="production-eks",namespace="team-a"} 1.000000
@@ -71,57 +19,133 @@ kube_customresource_eks_condition_status{condition_type="Responsive",region="eu-
 kube_customresource_eks_condition_status{condition_type="Synced",region="us-east-1",group="aws.platform.upbound.io",version="v1alpha1",kind="EKS",name="dev-eks",namespace="team-b"} 1.000000
 kube_customresource_eks_condition_status{condition_type="Ready",region="us-east-1",group="aws.platform.upbound.io",version="v1alpha1",kind="EKS",name="dev-eks",namespace="team-b"} 0.000000
 kube_customresource_eks_condition_status{condition_type="Responsive",region="us-east-1",group="aws.platform.upbound.io",version="v1alpha1",kind="EKS",name="dev-eks",namespace="team-b"} 1.000000
-# HELP kube_customresource_eks_node_info EKS cluster node configuration
-# TYPE kube_customresource_eks_node_info gauge
-kube_customresource_eks_node_info{info="node_count",instance_type="m5.xlarge",region="us-west-2",group="aws.platform.upbound.io",version="v1alpha1",kind="EKS",name="production-eks",namespace="team-a"} 3.000000
-kube_customresource_eks_node_info{info="node_count",instance_type="t3.medium",region="eu-west-1",group="aws.platform.upbound.io",version="v1alpha1",kind="EKS",name="staging-eks",namespace="team-a"} 2.000000
-kube_customresource_eks_node_info{info="node_count",instance_type="t3.small",region="us-east-1",group="aws.platform.upbound.io",version="v1alpha1",kind="EKS",name="dev-eks",namespace="team-b"} 1.000000
+# HELP kube_customresource_eks_mr_cluster_info Information about EKS Cluster managed resources with parent correlation (always 1)
+# TYPE kube_customresource_eks_mr_cluster_info gauge
+kube_customresource_eks_mr_cluster_info{composite="production-eks",composition_resource="kubernetesCluster",external_name="production-eks-9a1aa39ccad9",region="us-west-2",group="eks.aws.m.upbound.io",version="v1beta1",kind="Cluster",name="production-eks-9a1aa39ccad9",namespace="team-a"} 1.000000
+kube_customresource_eks_mr_cluster_info{composite="staging-eks",composition_resource="kubernetesCluster",external_name="staging-eks-971a16574b1f",region="eu-west-1",group="eks.aws.m.upbound.io",version="v1beta1",kind="Cluster",name="staging-eks-971a16574b1f",namespace="team-a"} 1.000000
+kube_customresource_eks_mr_cluster_info{composite="dev-eks",composition_resource="kubernetesCluster",external_name="dev-eks-e5b870109e56",region="us-east-1",group="eks.aws.m.upbound.io",version="v1beta1",kind="Cluster",name="dev-eks-e5b870109e56",namespace="team-b"} 1.000000
+# HELP kube_customresource_eks_responsive Responsive status of Crossplane XRs - circuit breaker state (1=closed/responsive, 0=open/throttled)
+# TYPE kube_customresource_eks_responsive gauge
+kube_customresource_eks_responsive{region="us-west-2",responsive_reason="WatchCircuitClosed",group="aws.platform.upbound.io",version="v1alpha1",kind="EKS",name="production-eks",namespace="team-a"} 1.000000
+kube_customresource_eks_responsive{region="eu-west-1",responsive_reason="WatchCircuitClosed",group="aws.platform.upbound.io",version="v1alpha1",kind="EKS",name="staging-eks",namespace="team-a"} 1.000000
+kube_customresource_eks_responsive{region="us-east-1",responsive_reason="WatchCircuitClosed",group="aws.platform.upbound.io",version="v1alpha1",kind="EKS",name="dev-eks",namespace="team-b"} 1.000000
+# HELP kube_customresource_eks_ready_limited Ready status of XRs with cardinality protection
+# TYPE kube_customresource_eks_ready_limited gauge
+kube_customresource_eks_ready_limited{region="us-west-2",group="aws.platform.upbound.io",version="v1alpha1",kind="EKS",name="production-eks",namespace="team-a"} 0.000000
+kube_customresource_eks_ready_limited{region="eu-west-1",group="aws.platform.upbound.io",version="v1alpha1",kind="EKS",name="staging-eks",namespace="team-a"} 0.000000
+kube_customresource_eks_ready_limited{region="us-east-1",group="aws.platform.upbound.io",version="v1alpha1",kind="EKS",name="dev-eks",namespace="team-b"} 0.000000
+# HELP kube_customresource_eks_synced_limited Synced status of XRs with cardinality protection
+# TYPE kube_customresource_eks_synced_limited gauge
+kube_customresource_eks_synced_limited{region="us-west-2",group="aws.platform.upbound.io",version="v1alpha1",kind="EKS",name="production-eks",namespace="team-a"} 1.000000
+kube_customresource_eks_synced_limited{region="eu-west-1",group="aws.platform.upbound.io",version="v1alpha1",kind="EKS",name="staging-eks",namespace="team-a"} 1.000000
+kube_customresource_eks_synced_limited{region="us-east-1",group="aws.platform.upbound.io",version="v1alpha1",kind="EKS",name="dev-eks",namespace="team-b"} 1.000000
+# HELP kube_customresource_eks_resource_count Number of managed resources in each XR
+# TYPE kube_customresource_eks_resource_count gauge
+kube_customresource_eks_resource_count{region="us-west-2",group="aws.platform.upbound.io",version="v1alpha1",kind="EKS",name="production-eks",namespace="team-a"} 7.000000
+kube_customresource_eks_resource_count{region="eu-west-1",group="aws.platform.upbound.io",version="v1alpha1",kind="EKS",name="staging-eks",namespace="team-a"} 7.000000
+kube_customresource_eks_resource_count{region="us-east-1",group="aws.platform.upbound.io",version="v1alpha1",kind="EKS",name="dev-eks",namespace="team-b"} 7.000000
+# HELP kube_customresource_eks_mr_cluster_synced Synced status of EKS Cluster managed resources (1=synced, 0=not synced)
+# TYPE kube_customresource_eks_mr_cluster_synced gauge
+kube_customresource_eks_mr_cluster_synced{region="us-east-1",sync_reason="ReconcileError",group="eks.aws.m.upbound.io",version="v1beta1",kind="Cluster",name="dev-eks-e5b870109e56",namespace="team-b"} 0.000000
+kube_customresource_eks_mr_cluster_synced{region="us-west-2",sync_reason="ReconcileError",group="eks.aws.m.upbound.io",version="v1beta1",kind="Cluster",name="production-eks-9a1aa39ccad9",namespace="team-a"} 0.000000
+kube_customresource_eks_mr_cluster_synced{region="eu-west-1",sync_reason="ReconcileError",group="eks.aws.m.upbound.io",version="v1beta1",kind="Cluster",name="staging-eks-971a16574b1f",namespace="team-a"} 0.000000
+# HELP kube_customresource_eks_mr_cluster_ready Ready status of EKS Cluster managed resources (1=ready, 0=not ready)
+# TYPE kube_customresource_eks_mr_cluster_ready gauge
+kube_customresource_eks_mr_cluster_ready{region="us-west-2",group="eks.aws.m.upbound.io",version="v1beta1",kind="Cluster",name="production-eks-9a1aa39ccad9",namespace="team-a"} 0.000000
+kube_customresource_eks_mr_cluster_ready{region="eu-west-1",group="eks.aws.m.upbound.io",version="v1beta1",kind="Cluster",name="staging-eks-971a16574b1f",namespace="team-a"} 0.000000
+kube_customresource_eks_mr_cluster_ready{region="us-east-1",group="eks.aws.m.upbound.io",version="v1beta1",kind="Cluster",name="dev-eks-e5b870109e56",namespace="team-b"} 0.000000
+# HELP kube_customresource_eks_synced Synced status of Crossplane XRs (1=synced, 0=not synced)
+# TYPE kube_customresource_eks_synced gauge
+kube_customresource_eks_synced{region="us-west-2",sync_reason="ReconcileSuccess",group="aws.platform.upbound.io",version="v1alpha1",kind="EKS",name="production-eks",namespace="team-a"} 1.000000
+kube_customresource_eks_synced{region="eu-west-1",sync_reason="ReconcileSuccess",group="aws.platform.upbound.io",version="v1alpha1",kind="EKS",name="staging-eks",namespace="team-a"} 1.000000
+kube_customresource_eks_synced{region="us-east-1",sync_reason="ReconcileSuccess",group="aws.platform.upbound.io",version="v1alpha1",kind="EKS",name="dev-eks",namespace="team-b"} 1.000000
+# HELP kube_customresource_eks_ready Ready status of Crossplane XRs (1=ready, 0=not ready)
+# TYPE kube_customresource_eks_ready gauge
+kube_customresource_eks_ready{region="us-west-2",group="aws.platform.upbound.io",version="v1alpha1",kind="EKS",name="production-eks",namespace="team-a"} 0.000000
+kube_customresource_eks_ready{region="eu-west-1",group="aws.platform.upbound.io",version="v1alpha1",kind="EKS",name="staging-eks",namespace="team-a"} 0.000000
+kube_customresource_eks_ready{region="us-east-1",group="aws.platform.upbound.io",version="v1alpha1",kind="EKS",name="dev-eks",namespace="team-b"} 0.000000
+# HELP kube_customresource_eks_team_ready Ready status of Crossplane XRs per team (1=ready, 0=not ready)
+# TYPE kube_customresource_eks_team_ready gauge
+kube_customresource_eks_team_ready{region="us-east-1",team="team-b",group="aws.platform.upbound.io",version="v1alpha1",kind="EKS",name="dev-eks",namespace="team-b"} 0.000000
+# HELP kube_customresource_eks_info Information about Crossplane XR configuration (always 1)
+# TYPE kube_customresource_eks_info gauge
+kube_customresource_eks_info{id="production-eks",instance_type="m5.xlarge",node_count="3",region="us-west-2",group="aws.platform.upbound.io",version="v1alpha1",kind="EKS",name="production-eks",namespace="team-a"} 1.000000
+kube_customresource_eks_info{id="staging-eks",instance_type="t3.medium",node_count="2",region="eu-west-1",group="aws.platform.upbound.io",version="v1alpha1",kind="EKS",name="staging-eks",namespace="team-a"} 1.000000
+kube_customresource_eks_info{id="dev-eks",instance_type="t3.small",node_count="1",region="us-east-1",group="aws.platform.upbound.io",version="v1alpha1",kind="EKS",name="dev-eks",namespace="team-b"} 1.000000
+# HELP kube_customresource_provider_healthy Health status of Crossplane providers (1=healthy, 0=unhealthy)
+# TYPE kube_customresource_provider_healthy gauge
+kube_customresource_provider_healthy{package="xpkg.upbound.io/upbound/provider-aws-eks:v2.5.0",revision="upbound-provider-aws-eks-c51761a15be1",group="pkg.crossplane.io",version="v1",kind="Provider",name="upbound-provider-aws-eks",namespace=""} 1.000000
+kube_customresource_provider_healthy{package="xpkg.upbound.io/upbound/provider-aws-iam:v2.5.0",revision="upbound-provider-aws-iam-854fa2fe0818",group="pkg.crossplane.io",version="v1",kind="Provider",name="upbound-provider-aws-iam",namespace=""} 1.000000
+kube_customresource_provider_healthy{package="xpkg.upbound.io/upbound/provider-family-aws:v2.5.0",revision="upbound-provider-family-aws-604659292671",group="pkg.crossplane.io",version="v1",kind="Provider",name="upbound-provider-family-aws",namespace=""} 1.000000
+kube_customresource_provider_healthy{package="xpkg.upbound.io/upbound/provider-helm:v1.2.0",revision="upbound-provider-helm-4e2bada791af",group="pkg.crossplane.io",version="v1",kind="Provider",name="upbound-provider-helm",namespace=""} 1.000000
+kube_customresource_provider_healthy{package="xpkg.upbound.io/upbound/provider-kubernetes:v1.2.1",revision="upbound-provider-kubernetes-87e2ce59b20b",group="pkg.crossplane.io",version="v1",kind="Provider",name="upbound-provider-kubernetes",namespace=""} 1.000000
+kube_customresource_provider_healthy{package="xpkg.upbound.io/upbound/provider-aws-ec2:v2.5.0",revision="upbound-provider-aws-ec2-956e2688224c",group="pkg.crossplane.io",version="v1",kind="Provider",name="upbound-provider-aws-ec2",namespace=""} 1.000000
+# HELP kube_customresource_provider_installed Installed status of Crossplane providers (1=installed, 0=not installed)
+# TYPE kube_customresource_provider_installed gauge
+kube_customresource_provider_installed{package="xpkg.upbound.io/upbound/provider-kubernetes:v1.2.1",group="pkg.crossplane.io",version="v1",kind="Provider",name="upbound-provider-kubernetes",namespace=""} 1.000000
+kube_customresource_provider_installed{package="xpkg.upbound.io/upbound/provider-aws-ec2:v2.5.0",group="pkg.crossplane.io",version="v1",kind="Provider",name="upbound-provider-aws-ec2",namespace=""} 1.000000
+kube_customresource_provider_installed{package="xpkg.upbound.io/upbound/provider-aws-eks:v2.5.0",group="pkg.crossplane.io",version="v1",kind="Provider",name="upbound-provider-aws-eks",namespace=""} 1.000000
+kube_customresource_provider_installed{package="xpkg.upbound.io/upbound/provider-aws-iam:v2.5.0",group="pkg.crossplane.io",version="v1",kind="Provider",name="upbound-provider-aws-iam",namespace=""} 1.000000
+kube_customresource_provider_installed{package="xpkg.upbound.io/upbound/provider-family-aws:v2.5.0",group="pkg.crossplane.io",version="v1",kind="Provider",name="upbound-provider-family-aws",namespace=""} 1.000000
+kube_customresource_provider_installed{package="xpkg.upbound.io/upbound/provider-helm:v1.2.0",group="pkg.crossplane.io",version="v1",kind="Provider",name="upbound-provider-helm",namespace=""} 1.000000
+# HELP kube_customresource_eks_mr_synced Synced status of EKS managed resources (1=synced, 0=not synced)
+# TYPE kube_customresource_eks_mr_synced gauge
+# HELP kube_customresource_eks_mr_synced Synced status of EKS managed resources (1=synced, 0=not synced)
+# TYPE kube_customresource_eks_mr_synced gauge
+# HELP kube_customresource_eks_mr_synced Synced status of EKS managed resources (1=synced, 0=not synced)
+# TYPE kube_customresource_eks_mr_synced gauge
+# HELP kube_customresource_eks_mr_synced Synced status of EKS managed resources (1=synced, 0=not synced)
+# TYPE kube_customresource_eks_mr_synced gauge
+# HELP kube_customresource_eks_mr_synced Synced status of EKS managed resources (1=synced, 0=not synced)
+# TYPE kube_customresource_eks_mr_synced gauge
+kube_customresource_eks_mr_synced{sync_reason="ReconcileError",group="eks.aws.m.upbound.io",version="v1beta1",kind="Cluster",name="dev-eks-e5b870109e56",namespace="team-b"} 0.000000
+kube_customresource_eks_mr_synced{sync_reason="ReconcileError",group="eks.aws.m.upbound.io",version="v1beta1",kind="Cluster",name="production-eks-9a1aa39ccad9",namespace="team-a"} 0.000000
+kube_customresource_eks_mr_synced{sync_reason="ReconcileError",group="eks.aws.m.upbound.io",version="v1beta1",kind="Cluster",name="staging-eks-971a16574b1f",namespace="team-a"} 0.000000
+# HELP kube_customresource_eks_mr_synced Synced status of EKS managed resources (1=synced, 0=not synced)
+# TYPE kube_customresource_eks_mr_synced gauge
+# HELP kube_customresource_eks_mr_synced Synced status of EKS managed resources (1=synced, 0=not synced)
+# TYPE kube_customresource_eks_mr_synced gauge
+# HELP kube_customresource_eks_mr_synced Synced status of EKS managed resources (1=synced, 0=not synced)
+# TYPE kube_customresource_eks_mr_synced gauge
+# HELP kube_customresource_eks_mr_synced Synced status of EKS managed resources (1=synced, 0=not synced)
+# TYPE kube_customresource_eks_mr_synced gauge
+kube_customresource_eks_mr_synced{sync_reason="ReconcileError",group="eks.aws.m.upbound.io",version="v1beta1",kind="PodIdentityAssociation",name="production-eks-deeedd151d94",namespace="team-a"} 0.000000
+kube_customresource_eks_mr_synced{sync_reason="ReconcileError",group="eks.aws.m.upbound.io",version="v1beta1",kind="PodIdentityAssociation",name="staging-eks-39ddbca99524",namespace="team-a"} 0.000000
+kube_customresource_eks_mr_synced{sync_reason="ReconcileError",group="eks.aws.m.upbound.io",version="v1beta1",kind="PodIdentityAssociation",name="dev-eks-8f5089718ad5",namespace="team-b"} 0.000000
+# HELP kube_customresource_function_healthy Health status of Crossplane functions (1=healthy, 0=unhealthy)
+# TYPE kube_customresource_function_healthy gauge
+kube_customresource_function_healthy{package="ghcr.io/crossplane-contrib/resource-state-metrics_rsm@sha256:d0c0e9d4fc74c94ec4cc66b03b826d1d6c8d236b968b8a193abf688d997917e1",revision="crossplane-contrib-resource-state-metricsrsm-d0c0e9d4fc74",group="pkg.crossplane.io",version="v1",kind="Function",name="crossplane-contrib-resource-state-metricsrsm",namespace=""} 1.000000
+kube_customresource_function_healthy{package="xpkg.upbound.io/upbound/configuration-aws-eks_eks@sha256:938a50a6b01808daaa4dcb2dbda3fe1d7bd38e2d3cfb0f06c50468f894aa12d1",revision="upbound-configuration-aws-ekseks-938a50a6b018",group="pkg.crossplane.io",version="v1",kind="Function",name="upbound-configuration-aws-ekseks",namespace=""} 1.000000
+kube_customresource_function_healthy{package="xpkg.upbound.io/upbound/configuration-aws-network_network@sha256:58e560624a2cb9eb054782751ad6604e6365e0e53a3aec1965be0c0dfecdd082",revision="upbound-configuration-aws-networknetwork-58e560624a2c",group="pkg.crossplane.io",version="v1",kind="Function",name="upbound-configuration-aws-networknetwork",namespace=""} 1.000000
+kube_customresource_function_healthy{package="xpkg.upbound.io/crossplane-contrib/function-auto-ready:v0.6.2",revision="crossplane-contrib-function-auto-ready-21717ae2e630",group="pkg.crossplane.io",version="v1",kind="Function",name="crossplane-contrib-function-auto-ready",namespace=""} 1.000000
+# HELP kube_customresource_function_installed Installed status of Crossplane functions (1=installed, 0=not installed)
+# TYPE kube_customresource_function_installed gauge
+kube_customresource_function_installed{package="xpkg.upbound.io/crossplane-contrib/function-auto-ready:v0.6.2",group="pkg.crossplane.io",version="v1",kind="Function",name="crossplane-contrib-function-auto-ready",namespace=""} 1.000000
+kube_customresource_function_installed{package="ghcr.io/crossplane-contrib/resource-state-metrics_rsm@sha256:d0c0e9d4fc74c94ec4cc66b03b826d1d6c8d236b968b8a193abf688d997917e1",group="pkg.crossplane.io",version="v1",kind="Function",name="crossplane-contrib-resource-state-metricsrsm",namespace=""} 1.000000
+kube_customresource_function_installed{package="xpkg.upbound.io/upbound/configuration-aws-eks_eks@sha256:938a50a6b01808daaa4dcb2dbda3fe1d7bd38e2d3cfb0f06c50468f894aa12d1",group="pkg.crossplane.io",version="v1",kind="Function",name="upbound-configuration-aws-ekseks",namespace=""} 1.000000
+kube_customresource_function_installed{package="xpkg.upbound.io/upbound/configuration-aws-network_network@sha256:58e560624a2cb9eb054782751ad6604e6365e0e53a3aec1965be0c0dfecdd082",group="pkg.crossplane.io",version="v1",kind="Function",name="upbound-configuration-aws-networknetwork",namespace=""} 1.000000
+# HELP kube_customresource_eks_team_ready Ready status of Crossplane XRs per team (1=ready, 0=not ready)
+# TYPE kube_customresource_eks_team_ready gauge
+kube_customresource_eks_team_ready{region="us-west-2",team="team-a",group="aws.platform.upbound.io",version="v1alpha1",kind="EKS",name="production-eks",namespace="team-a"} 0.000000
+kube_customresource_eks_team_ready{region="eu-west-1",team="team-a",group="aws.platform.upbound.io",version="v1alpha1",kind="EKS",name="staging-eks",namespace="team-a"} 0.000000
+# HELP kube_customresource_configuration_healthy Health status of Crossplane configurations (1=healthy, 0=unhealthy)
+# TYPE kube_customresource_configuration_healthy gauge
+kube_customresource_configuration_healthy{package="ghcr.io/crossplane-contrib/resource-state-metrics:v0.0.0-1773863275",revision="resource-state-metrics-7d0c6b077768",group="pkg.crossplane.io",version="v1",kind="Configuration",name="resource-state-metrics",namespace=""} 1.000000
+kube_customresource_configuration_healthy{package="xpkg.upbound.io/upbound/configuration-aws-eks:v2.0.1",revision="upbound-configuration-aws-eks-b2b933b18db8",group="pkg.crossplane.io",version="v1",kind="Configuration",name="upbound-configuration-aws-eks",namespace=""} 1.000000
+kube_customresource_configuration_healthy{package="xpkg.upbound.io/upbound/configuration-aws-network:v2.0.0",revision="upbound-configuration-aws-network-b41f9c196826",group="pkg.crossplane.io",version="v1",kind="Configuration",name="upbound-configuration-aws-network",namespace=""} 1.000000
+# HELP kube_customresource_configuration_installed Installed status of Crossplane configurations (1=installed, 0=not installed)
+# TYPE kube_customresource_configuration_installed gauge
+kube_customresource_configuration_installed{package="ghcr.io/crossplane-contrib/resource-state-metrics:v0.0.0-1773863275",group="pkg.crossplane.io",version="v1",kind="Configuration",name="resource-state-metrics",namespace=""} 1.000000
+kube_customresource_configuration_installed{package="xpkg.upbound.io/upbound/configuration-aws-eks:v2.0.1",group="pkg.crossplane.io",version="v1",kind="Configuration",name="upbound-configuration-aws-eks",namespace=""} 1.000000
+kube_customresource_configuration_installed{package="xpkg.upbound.io/upbound/configuration-aws-network:v2.0.0",group="pkg.crossplane.io",version="v1",kind="Configuration",name="upbound-configuration-aws-network",namespace=""} 1.000000
 # HELP kube_customresource_eks_condition Condition status per type for Crossplane XRs (1=True, 0=False)
 # TYPE kube_customresource_eks_condition gauge
+kube_customresource_eks_condition{condition_type="Ready",group="aws.platform.upbound.io",version="v1alpha1",kind="EKS",name="production-eks",namespace="team-a"} 1.000000
+kube_customresource_eks_condition{condition_type="Responsive",group="aws.platform.upbound.io",version="v1alpha1",kind="EKS",name="production-eks",namespace="team-a"} 0.000000
+kube_customresource_eks_condition{condition_type="Synced",group="aws.platform.upbound.io",version="v1alpha1",kind="EKS",name="production-eks",namespace="team-a"} 1.000000
 kube_customresource_eks_condition{condition_type="Ready",group="aws.platform.upbound.io",version="v1alpha1",kind="EKS",name="staging-eks",namespace="team-a"} 1.000000
 kube_customresource_eks_condition{condition_type="Responsive",group="aws.platform.upbound.io",version="v1alpha1",kind="EKS",name="staging-eks",namespace="team-a"} 0.000000
 kube_customresource_eks_condition{condition_type="Synced",group="aws.platform.upbound.io",version="v1alpha1",kind="EKS",name="staging-eks",namespace="team-a"} 1.000000
 kube_customresource_eks_condition{condition_type="Ready",group="aws.platform.upbound.io",version="v1alpha1",kind="EKS",name="dev-eks",namespace="team-b"} 1.000000
 kube_customresource_eks_condition{condition_type="Responsive",group="aws.platform.upbound.io",version="v1alpha1",kind="EKS",name="dev-eks",namespace="team-b"} 0.000000
 kube_customresource_eks_condition{condition_type="Synced",group="aws.platform.upbound.io",version="v1alpha1",kind="EKS",name="dev-eks",namespace="team-b"} 1.000000
-kube_customresource_eks_condition{condition_type="Ready",group="aws.platform.upbound.io",version="v1alpha1",kind="EKS",name="production-eks",namespace="team-a"} 1.000000
-kube_customresource_eks_condition{condition_type="Responsive",group="aws.platform.upbound.io",version="v1alpha1",kind="EKS",name="production-eks",namespace="team-a"} 0.000000
-kube_customresource_eks_condition{condition_type="Synced",group="aws.platform.upbound.io",version="v1alpha1",kind="EKS",name="production-eks",namespace="team-a"} 1.000000
-# HELP kube_customresource_eks_ready_last_transition_timestamp Unix timestamp when XR Ready condition last transitioned
-# TYPE kube_customresource_eks_ready_last_transition_timestamp gauge
-kube_customresource_eks_ready_last_transition_timestamp{ready_status="False",region="eu-west-1",group="aws.platform.upbound.io",version="v1alpha1",kind="EKS",name="staging-eks",namespace="team-a"} 1773137494.000000
-kube_customresource_eks_ready_last_transition_timestamp{ready_status="False",region="us-east-1",group="aws.platform.upbound.io",version="v1alpha1",kind="EKS",name="dev-eks",namespace="team-b"} 1773137494.000000
-kube_customresource_eks_ready_last_transition_timestamp{ready_status="False",region="us-west-2",group="aws.platform.upbound.io",version="v1alpha1",kind="EKS",name="production-eks",namespace="team-a"} 1773137494.000000
-# HELP kube_customresource_eks_synced Synced status of Crossplane XRs (1=synced, 0=not synced)
-# TYPE kube_customresource_eks_synced gauge
-kube_customresource_eks_synced{region="eu-west-1",sync_reason="ReconcileSuccess",group="aws.platform.upbound.io",version="v1alpha1",kind="EKS",name="staging-eks",namespace="team-a"} 1.000000
-kube_customresource_eks_synced{region="us-east-1",sync_reason="ReconcileSuccess",group="aws.platform.upbound.io",version="v1alpha1",kind="EKS",name="dev-eks",namespace="team-b"} 1.000000
-kube_customresource_eks_synced{region="us-west-2",sync_reason="ReconcileSuccess",group="aws.platform.upbound.io",version="v1alpha1",kind="EKS",name="production-eks",namespace="team-a"} 1.000000
-# HELP kube_customresource_eks_mr_cluster_synced Synced status of EKS Cluster managed resources (1=synced, 0=not synced)
-# TYPE kube_customresource_eks_mr_cluster_synced gauge
-kube_customresource_eks_mr_cluster_synced{region="us-west-2",sync_reason="ReconcileError",group="eks.aws.m.upbound.io",version="v1beta1",kind="Cluster",name="production-eks-fc662e179f20",namespace="team-a"} 0.000000
-kube_customresource_eks_mr_cluster_synced{region="eu-west-1",sync_reason="ReconcileError",group="eks.aws.m.upbound.io",version="v1beta1",kind="Cluster",name="staging-eks-cf5379ecb464",namespace="team-a"} 0.000000
-kube_customresource_eks_mr_cluster_synced{region="us-east-1",sync_reason="ReconcileError",group="eks.aws.m.upbound.io",version="v1beta1",kind="Cluster",name="dev-eks-c783272e5597",namespace="team-b"} 0.000000
-# HELP kube_customresource_eks_mr_cluster_ready Ready status of EKS Cluster managed resources (1=ready, 0=not ready)
-# TYPE kube_customresource_eks_mr_cluster_ready gauge
-kube_customresource_eks_mr_cluster_ready{region="us-west-2",group="eks.aws.m.upbound.io",version="v1beta1",kind="Cluster",name="production-eks-fc662e179f20",namespace="team-a"} 0.000000
-kube_customresource_eks_mr_cluster_ready{region="eu-west-1",group="eks.aws.m.upbound.io",version="v1beta1",kind="Cluster",name="staging-eks-cf5379ecb464",namespace="team-a"} 0.000000
-kube_customresource_eks_mr_cluster_ready{region="us-east-1",group="eks.aws.m.upbound.io",version="v1beta1",kind="Cluster",name="dev-eks-c783272e5597",namespace="team-b"} 0.000000
-# HELP kube_customresource_eks_team_ready Ready status of Crossplane XRs per team (1=ready, 0=not ready)
-# TYPE kube_customresource_eks_team_ready gauge
-kube_customresource_eks_team_ready{region="us-east-1",team="team-b",group="aws.platform.upbound.io",version="v1alpha1",kind="EKS",name="dev-eks",namespace="team-b"} 0.000000
-# HELP kube_customresource_configuration_healthy Health status of Crossplane configurations (1=healthy, 0=unhealthy)
-# TYPE kube_customresource_configuration_healthy gauge
-kube_customresource_configuration_healthy{package="xpkg.crossplane.io/crossplane-contrib/resource-state-metrics:v0.2.0",revision="crossplane-contrib-resource-state-metrics-8847f6d80319",group="pkg.crossplane.io",version="v1",kind="Configuration",name="crossplane-contrib-resource-state-metrics",namespace=""} 1.000000
-kube_customresource_configuration_healthy{package="xpkg.upbound.io/upbound/configuration-aws-eks:v2.0.1",revision="upbound-configuration-aws-eks-b2b933b18db8",group="pkg.crossplane.io",version="v1",kind="Configuration",name="upbound-configuration-aws-eks",namespace=""} 1.000000
-kube_customresource_configuration_healthy{package="xpkg.upbound.io/upbound/configuration-aws-network:v2.0.0",revision="upbound-configuration-aws-network-b41f9c196826",group="pkg.crossplane.io",version="v1",kind="Configuration",name="upbound-configuration-aws-network",namespace=""} 1.000000
-# HELP kube_customresource_configuration_installed Installed status of Crossplane configurations (1=installed, 0=not installed)
-# TYPE kube_customresource_configuration_installed gauge
-kube_customresource_configuration_installed{package="xpkg.crossplane.io/crossplane-contrib/resource-state-metrics:v0.2.0",group="pkg.crossplane.io",version="v1",kind="Configuration",name="crossplane-contrib-resource-state-metrics",namespace=""} 1.000000
-kube_customresource_configuration_installed{package="xpkg.upbound.io/upbound/configuration-aws-eks:v2.0.1",group="pkg.crossplane.io",version="v1",kind="Configuration",name="upbound-configuration-aws-eks",namespace=""} 1.000000
-kube_customresource_configuration_installed{package="xpkg.upbound.io/upbound/configuration-aws-network:v2.0.0",group="pkg.crossplane.io",version="v1",kind="Configuration",name="upbound-configuration-aws-network",namespace=""} 1.000000
-# HELP kube_customresource_eks_responsive Responsive status of Crossplane XRs - circuit breaker state (1=closed/responsive, 0=open/throttled)
-# TYPE kube_customresource_eks_responsive gauge
-kube_customresource_eks_responsive{region="eu-west-1",responsive_reason="WatchCircuitClosed",group="aws.platform.upbound.io",version="v1alpha1",kind="EKS",name="staging-eks",namespace="team-a"} 1.000000
-kube_customresource_eks_responsive{region="us-east-1",responsive_reason="WatchCircuitClosed",group="aws.platform.upbound.io",version="v1alpha1",kind="EKS",name="dev-eks",namespace="team-b"} 1.000000
-kube_customresource_eks_responsive{region="us-west-2",responsive_reason="WatchCircuitClosed",group="aws.platform.upbound.io",version="v1alpha1",kind="EKS",name="production-eks",namespace="team-a"} 1.000000

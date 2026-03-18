@@ -16,7 +16,7 @@ spec:
       replicas: 1
       image:
         repository: xpkg.crossplane.io/crossplane-contrib/resource-state-metrics-server
-        tag: v0.2.0
+        tag: 5383f7d
       resources:
         limits:
           cpu: 200m

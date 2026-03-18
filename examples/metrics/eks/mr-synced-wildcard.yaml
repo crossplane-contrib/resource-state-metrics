@@ -1,0 +1,45 @@
+# Example: Track All EKS Managed Resource Sync Status (Wildcard)
+# Use Case: Monitor sync status of all MR kinds under eks.aws.m.upbound.io with a single monitor
+# Resolver: CEL (Common Expression Language)
+#
+# This example uses kind: "*" to wildcard-match all managed resource kinds under
+# eks.aws.m.upbound.io/v1beta1 (e.g. Cluster, PodIdentityAssociation, and any future kinds).
+# The auto-added "kind" label lets you filter by MR type in PromQL.
+#
+# Metrics Generated:
+# - kube_customresource_eks_mr_synced (gauge): 1=synced, 0=not synced
+#
+# PromQL Queries:
+# - Not-synced MRs (all kinds): kube_customresource_eks_mr_synced == 0
+# - Not-synced Clusters only: kube_customresource_eks_mr_synced{kind="Cluster"} == 0
+# - Sync rate per kind: (sum by (kind)(kube_customresource_eks_mr_synced) / count by (kind)(kube_customresource_eks_mr_synced)) * 100
+# - Group sync failures by reason: sum by (sync_reason, kind) (kube_customresource_eks_mr_synced == 0)
+#
+# Target MRs:
+#   apiVersion: eks.aws.m.upbound.io/v1beta1
+#   kind: Cluster | PodIdentityAssociation | ...
+#
+
+apiVersion: resource-state-metrics.instrumentation.k8s-sigs.io/v1alpha1
+kind: ResourceMetricsMonitor
+metadata:
+  name: mr-eks-synced-wildcard
+  namespace: resource-state-metrics
+spec:
+  configuration:
+    stores:
+      - group: "eks.aws.m.upbound.io"
+        version: "v1beta1"
+        kind: "*"
+        resource: "*"
+        resolver: "cel"
+        families:
+          - name: "eks_mr_synced"
+            help: "Synced status of EKS managed resources (1=synced, 0=not synced)"
+            metrics:
+              - labels:
+                  - name: "sync_reason"
+                    value: |
+                      o.status.conditions.exists(c, c.type == 'Synced') ?
+                        o.status.conditions.filter(c, c.type == 'Synced')[0].reason : 'Unknown'
+                value: "o.status.conditions.exists(c, c.type == 'Synced' && c.status == 'True') ? 1 : 0"

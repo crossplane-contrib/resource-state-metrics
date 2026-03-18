@@ -1,0 +1,73 @@
+# PromQL tests for examples/metrics/eks/mr-synced-wildcard.yaml
+# Run with: promtool test rules promql-tests/eks/mr-synced-wildcard_test.yaml
+#
+# Metric: eks_mr_synced (gauge) - Wildcard across all eks.aws.m.upbound.io kinds
+# Target: eks.aws.m.upbound.io/v1beta1 kind: * (Cluster, PodIdentityAssociation, ...)
+# Generated from: promql-tests/fixtures/metrics.prom
+
+evaluation_interval: 1m
+
+tests:
+  - interval: 1m
+    input_series:
+      # eks_mr_synced - Cluster
+      - series: 'kube_customresource_eks_mr_synced{sync_reason="ReconcileError",group="eks.aws.m.upbound.io",version="v1beta1",kind="Cluster",name="dev-eks-e5b870109e56",namespace="team-b"}'
+        values: "0"
+      - series: 'kube_customresource_eks_mr_synced{sync_reason="ReconcileError",group="eks.aws.m.upbound.io",version="v1beta1",kind="Cluster",name="production-eks-9a1aa39ccad9",namespace="team-a"}'
+        values: "0"
+      - series: 'kube_customresource_eks_mr_synced{sync_reason="ReconcileError",group="eks.aws.m.upbound.io",version="v1beta1",kind="Cluster",name="staging-eks-971a16574b1f",namespace="team-a"}'
+        values: "0"
+      # eks_mr_synced - PodIdentityAssociation
+      - series: 'kube_customresource_eks_mr_synced{sync_reason="ReconcileError",group="eks.aws.m.upbound.io",version="v1beta1",kind="PodIdentityAssociation",name="production-eks-deeedd151d94",namespace="team-a"}'
+        values: "0"
+      - series: 'kube_customresource_eks_mr_synced{sync_reason="ReconcileError",group="eks.aws.m.upbound.io",version="v1beta1",kind="PodIdentityAssociation",name="staging-eks-39ddbca99524",namespace="team-a"}'
+        values: "0"
+      - series: 'kube_customresource_eks_mr_synced{sync_reason="ReconcileError",group="eks.aws.m.upbound.io",version="v1beta1",kind="PodIdentityAssociation",name="dev-eks-8f5089718ad5",namespace="team-b"}'
+        values: "0"
+
+    promql_expr_test:
+      # Not-synced MRs across all kinds
+      - expr: kube_customresource_eks_mr_synced == 0
+        eval_time: 0m
+        exp_samples:
+          - labels: 'kube_customresource_eks_mr_synced{sync_reason="ReconcileError",group="eks.aws.m.upbound.io",version="v1beta1",kind="Cluster",name="dev-eks-e5b870109e56",namespace="team-b"}'
+            value: 0
+          - labels: 'kube_customresource_eks_mr_synced{sync_reason="ReconcileError",group="eks.aws.m.upbound.io",version="v1beta1",kind="Cluster",name="production-eks-9a1aa39ccad9",namespace="team-a"}'
+            value: 0
+          - labels: 'kube_customresource_eks_mr_synced{sync_reason="ReconcileError",group="eks.aws.m.upbound.io",version="v1beta1",kind="Cluster",name="staging-eks-971a16574b1f",namespace="team-a"}'
+            value: 0
+          - labels: 'kube_customresource_eks_mr_synced{sync_reason="ReconcileError",group="eks.aws.m.upbound.io",version="v1beta1",kind="PodIdentityAssociation",name="production-eks-deeedd151d94",namespace="team-a"}'
+            value: 0
+          - labels: 'kube_customresource_eks_mr_synced{sync_reason="ReconcileError",group="eks.aws.m.upbound.io",version="v1beta1",kind="PodIdentityAssociation",name="staging-eks-39ddbca99524",namespace="team-a"}'
+            value: 0
+          - labels: 'kube_customresource_eks_mr_synced{sync_reason="ReconcileError",group="eks.aws.m.upbound.io",version="v1beta1",kind="PodIdentityAssociation",name="dev-eks-8f5089718ad5",namespace="team-b"}'
+            value: 0
+
+      # Filter by kind: only Clusters
+      - expr: kube_customresource_eks_mr_synced{kind="Cluster"} == 0
+        eval_time: 0m
+        exp_samples:
+          - labels: 'kube_customresource_eks_mr_synced{sync_reason="ReconcileError",group="eks.aws.m.upbound.io",version="v1beta1",kind="Cluster",name="dev-eks-e5b870109e56",namespace="team-b"}'
+            value: 0
+          - labels: 'kube_customresource_eks_mr_synced{sync_reason="ReconcileError",group="eks.aws.m.upbound.io",version="v1beta1",kind="Cluster",name="production-eks-9a1aa39ccad9",namespace="team-a"}'
+            value: 0
+          - labels: 'kube_customresource_eks_mr_synced{sync_reason="ReconcileError",group="eks.aws.m.upbound.io",version="v1beta1",kind="Cluster",name="staging-eks-971a16574b1f",namespace="team-a"}'
+            value: 0
+
+      # Sync rate per kind (all 0, so 0% synced per kind)
+      - expr: (sum by (kind)(kube_customresource_eks_mr_synced) / count by (kind)(kube_customresource_eks_mr_synced)) * 100
+        eval_time: 0m
+        exp_samples:
+          - labels: '{kind="Cluster"}'
+            value: 0
+          - labels: '{kind="PodIdentityAssociation"}'
+            value: 0
+
+      # Group sync failures by reason and kind
+      - expr: count by (sync_reason, kind) (kube_customresource_eks_mr_synced == 0)
+        eval_time: 0m
+        exp_samples:
+          - labels: '{sync_reason="ReconcileError",kind="Cluster"}'
+            value: 3
+          - labels: '{sync_reason="ReconcileError",kind="PodIdentityAssociation"}'
+            value: 3
