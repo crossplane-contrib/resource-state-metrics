@@ -3,4 +3,4 @@ kind: Configuration
 metadata:
   name: crossplane-contrib-resource-state-metrics
 spec:
-  package: xpkg.crossplane.io/crossplane-contrib/resource-state-metrics:v0.2.0
+  package: "xpkg.crossplane.io/crossplane-contrib/resource-state-metrics-server:v0.3.0"
