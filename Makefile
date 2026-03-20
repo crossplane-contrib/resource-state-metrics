@@ -127,14 +127,27 @@ local:
 	kubectl wait function.pkg --all --for=condition=Healthy --timeout 5m
 	kubectl wait function.pkg --all --for=condition=Installed --timeout 5m
 	kubectl wait functionrevisions.pkg --all --for=condition=RevisionHealthy --timeout 5m
+	kubectl create namespace team-a --dry-run=client -o yaml | kubectl apply -f -
+	kubectl create namespace team-b --dry-run=client -o yaml | kubectl apply -f -
+	@if [ -n "$${AWS_CLOUD_CREDENTIALS}" ]; then \
+		echo "Creating cloud credential secret..."; \
+		kubectl -n team-a create secret generic provider-creds \
+			--from-literal=creds="$${AWS_CLOUD_CREDENTIALS}" \
+			--dry-run=client -o yaml | kubectl apply -f -; \
+		kubectl -n team-b create secret generic provider-creds \
+			--from-literal=creds="$${AWS_CLOUD_CREDENTIALS}" \
+			--dry-run=client -o yaml | kubectl apply -f -; \
+		echo "Creating default ProviderConfig..."; \
+		kubectl apply -f examples/provider-config.yaml; \
+	else \
+		echo "Skipping cloud credentials and ProviderConfigs (AWS_CLOUD_CREDENTIALS not set)"; \
+	fi
 	@for i in $$(seq 1 60); do \
 		kubectl get namespace $(RSM_NAMESPACE) >/dev/null 2>&1 && break; \
 		sleep 5; \
 	done
 	kubectl wait --for=condition=available deployment/resource-state-metrics \
 		-n $(RSM_NAMESPACE) --timeout=300s
-	kubectl create namespace team-a --dry-run=client -o yaml | kubectl apply -f -
-	kubectl create namespace team-b --dry-run=client -o yaml | kubectl apply -f -
 	kubectl apply -R -f examples/metrics/
 	helm repo add prometheus-community https://prometheus-community.github.io/helm-charts || true
 	helm repo update prometheus-community
@@ -164,7 +177,7 @@ local:
 	@echo "============================================================"
 	@echo " Grafana:     kubectl port-forward -n $(MONITORING_NS) svc/kube-prometheus-stack-grafana 3000:80"
 	@echo "              http://localhost:3000  (user: admin)"
-	@echo "              kubectl get secret --namespace monitoring -l app.kubernetes.io/component=admin-secret -o jsonpath=\"{.items[0].data.admin-password}\" | base64 --decode ; echo"
+	@echo "              kubectl get secret --namespace $(MONITORING_NS) -l app.kubernetes.io/component=admin-secret -o jsonpath=\"{.items[0].data.admin-password}\" | base64 --decode ; echo"
 	@echo ""
 	@echo " Prometheus:  kubectl port-forward -n $(MONITORING_NS) svc/kube-prometheus-stack-prometheus 9090:9090"
 	@echo "              http://localhost:9090"
@@ -175,4 +188,7 @@ local:
 
 .PHONY: local-clean
 local-clean:
-	kind delete cluster --name upbound-resource-state-metrics-local
+	@echo "Deleting XRs with foreground cascading deletion (to avoid cloud resource leaks)..."
+	kubectl delete -f examples/metrics/eks/xrs.yaml --cascade=foreground --wait --timeout=30m --ignore-not-found
+	@echo "XRs deleted. Stopping local environment..."
+	up project stop --force

@@ -1,0 +1,25 @@
+apiVersion: aws.m.upbound.io/v1beta1
+kind: ProviderConfig
+metadata:
+  name: default
+  namespace: team-a
+spec:
+  credentials:
+    source: Secret
+    secretRef:
+      name: provider-creds
+      namespace: team-a
+      key: creds
+---
+apiVersion: aws.m.upbound.io/v1beta1
+kind: ProviderConfig
+metadata:
+  name: default
+  namespace: team-b
+spec:
+  credentials:
+    source: Secret
+    secretRef:
+      name: provider-creds
+      namespace: team-b
+      key: creds
