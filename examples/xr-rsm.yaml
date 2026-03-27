@@ -17,6 +17,11 @@ spec:
       image:
         repository: xpkg.crossplane.io/crossplane-contrib/resource-state-metrics-server
         tag: v0.3.0
+      podMetadata:
+        labels:
+          example-label: example-label-value
+        annotations:
+          example-annotation: example-annotation-value
       resources:
         limits:
           cpu: 200m

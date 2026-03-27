@@ -20,10 +20,19 @@ spec:
       app.kubernetes.io/name: resource-state-metrics
   template:
     metadata:
+      {{- with $xr.spec.parameters.deployment.podMetadata.annotations }}
+      annotations:
+        {{- range $k, $v := . }}
+        {{ $k }}: {{ $v }}
+        {{- end }}
+      {{- end }}
       labels:
         app.kubernetes.io/component: exporter
         app.kubernetes.io/name: resource-state-metrics
         app.kubernetes.io/version: 0.0.1
+        {{- range $k, $v := $xr.spec.parameters.deployment.podMetadata.labels }}
+        {{ $k }}: {{ $v }}
+        {{- end }}
     spec:
       automountServiceAccountToken: true
       serviceAccountName: resource-state-metrics

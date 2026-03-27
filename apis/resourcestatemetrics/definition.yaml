@@ -39,6 +39,20 @@ spec:
                               or a specific version tag.
                             type: string
                         type: object
+                      podMetadata:
+                        description: "Pod's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata"
+                        properties:
+                          labels:
+                            description: "Map of string keys and values that can be used to organize and categorize (scope and select) objects. May match selectors of replication controllers and services. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels"
+                            additionalProperties:
+                              x-kubernetes-preserve-unknown-fields: true
+                            type: object
+                          annotations:
+                            description: "Annotations is an unstructured key value map stored with a resource that may be set by external tools to store and retrieve arbitrary metadata. They are not queryable and should be preserved when modifying objects. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations"
+                            additionalProperties:
+                              x-kubernetes-preserve-unknown-fields: true
+                            type: object
+                        type: object
                       replicas:
                         description: Number of controller replicas to run. Defaults to 1 for
                           high availability consider 2 or more.

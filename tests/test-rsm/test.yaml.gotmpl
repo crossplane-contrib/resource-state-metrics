@@ -548,10 +548,13 @@ items:
               app.kubernetes.io/name: resource-state-metrics
           template:
             metadata:
+              annotations:
+                example-annotation: example-annotation-value
               labels:
                 app.kubernetes.io/component: exporter
                 app.kubernetes.io/name: resource-state-metrics
                 app.kubernetes.io/version: "0.0.1"
+                example-label: example-label-value
             spec:
               automountServiceAccountToken: true
               containers:
