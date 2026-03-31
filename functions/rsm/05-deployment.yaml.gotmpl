@@ -6,7 +6,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: resource-state-metrics
-  namespace: {{ $xr.spec.parameters.namespace }}
+  namespace: {{ $xr.spec.parameters.namespace.name }}
   annotations:
     {{ setResourceNameAnnotation "deployment" }}
   labels:

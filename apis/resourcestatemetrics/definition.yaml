@@ -83,9 +83,16 @@ spec:
                         type: object
                     type: object
                   namespace:
-                    description: Kubernetes namespace where the resource-state-metrics controller
-                      and related resources will be deployed.
-                    type: string
+                    description: Kubernetes namespace configuration.
+                    properties:
+                      name:
+                        type: string
+                        description: Kubernetes namespace where the resource-state-metrics controller and related resources will be deployed.
+                      create:
+                        type: boolean
+                        description: Should the kubernetes namespace be provisioned.
+                        default: true
+                    type: object
                   rbac:
                     description: RBAC configuration for the controller.
                     properties:

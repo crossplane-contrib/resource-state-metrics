@@ -4,7 +4,8 @@ metadata:
   name: rsm
 spec:
   parameters:
-    namespace: resource-state-metrics
+    namespace:
+      name: resource-state-metrics
     rbac:
       allowedAPIGroups:
         - apiextensions.crossplane.io

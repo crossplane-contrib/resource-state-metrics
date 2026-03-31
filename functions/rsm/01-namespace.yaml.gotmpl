@@ -1,13 +1,15 @@
 # code: language=yaml
 # yaml-language-server: $schema=../../.up/json/models/index.schema.json
 
+{{- if $xr.spec.parameters.namespace.create }}
 ---
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: {{ $xr.spec.parameters.namespace }}
+  name: {{ $xr.spec.parameters.namespace.name }}
   annotations:
     {{ setResourceNameAnnotation "namespace" }}
   labels:
     app.kubernetes.io/name: resource-state-metrics
     app.kubernetes.io/managed-by: crossplane
+{{- end }}

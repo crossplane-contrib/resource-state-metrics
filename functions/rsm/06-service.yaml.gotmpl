@@ -6,7 +6,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: resource-state-metrics
-  namespace: {{ $xr.spec.parameters.namespace }}
+  namespace: {{ $xr.spec.parameters.namespace.name }}
   annotations:
     {{ setResourceNameAnnotation "service" }}
   labels:
