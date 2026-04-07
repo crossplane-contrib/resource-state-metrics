@@ -521,12 +521,12 @@ items:
         subjects:
           - kind: ServiceAccount
             name: resource-state-metrics
-            namespace: resource-state-metrics
+            namespace: resource-state-metrics-system
       - apiVersion: apps/v1
         kind: Deployment
         metadata:
           name: resource-state-metrics
-          namespace: resource-state-metrics
+          namespace: resource-state-metrics-system
           annotations:
             crossplane.io/composition-resource-name: deployment
           labels:
@@ -605,7 +605,7 @@ items:
       - apiVersion: v1
         kind: Namespace
         metadata:
-          name: resource-state-metrics
+          name: resource-state-metrics-system
           annotations:
             crossplane.io/composition-resource-name: namespace
           labels:
@@ -623,7 +623,7 @@ items:
         kind: Service
         metadata:
           name: resource-state-metrics
-          namespace: resource-state-metrics
+          namespace: resource-state-metrics-system
           annotations:
             crossplane.io/composition-resource-name: service
           labels:
@@ -654,7 +654,7 @@ items:
         automountServiceAccountToken: false
         metadata:
           name: resource-state-metrics
-          namespace: resource-state-metrics
+          namespace: resource-state-metrics-system
           annotations:
             crossplane.io/composition-resource-name: serviceaccount
           labels:
