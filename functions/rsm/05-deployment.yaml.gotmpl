@@ -38,6 +38,17 @@ spec:
       serviceAccountName: resource-state-metrics
       nodeSelector:
         kubernetes.io/os: linux
+        {{- range $k, $v := $xr.spec.parameters.deployment.nodeSelector }}
+        {{ $k }}: {{ quote $v }}
+        {{- end }}
+      {{- with $xr.spec.parameters.deployment.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 6 }}
+      {{- end }}
+      {{- with $xr.spec.parameters.deployment.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       containers:
       - name: resource-state-metrics
         image: {{ $xr.spec.parameters.deployment.image.repository }}:{{ $xr.spec.parameters.deployment.image.tag }}

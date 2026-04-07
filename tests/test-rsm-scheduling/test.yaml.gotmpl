@@ -1,0 +1,160 @@
+# code: language=yaml
+# yaml-language-server: $schema=../../.up/json/models/test.schema.json
+
+# This test validates that pod scheduling constraints (nodeSelector, tolerations,
+# affinity) are correctly rendered in the Deployment.
+
+items:
+- apiVersion: meta.dev.upbound.io/v1alpha1
+  kind: CompositionTest
+  metadata:
+    name: "rsm-scheduling"
+  spec:
+    compositionPath: "apis/resourcestatemetrics/composition.yaml"
+    xrdPath: "apis/resourcestatemetrics/definition.yaml"
+    xr:
+      apiVersion: metrics.crossplane.io/v1alpha1
+      kind: ResourceStateMetrics
+      metadata:
+        name: rsm
+      spec:
+        parameters:
+          namespace: resource-state-metrics
+          rbac:
+            allowedAPIGroups:
+              - apiextensions.crossplane.io
+              - metrics.crossplane.io
+              - pkg.crossplane.io
+              - aws.platform.upbound.io
+              - eks.aws.m.upbound.io
+          deployment:
+            replicas: 1
+            image:
+              repository: xpkg.crossplane.io/crossplane-contrib/resource-state-metrics-server
+              tag: v0.3.0
+            podMetadata:
+              labels:
+                example-label: example-label-value
+              annotations:
+                example-annotation: example-annotation-value
+            nodeSelector:
+              node-role.kubernetes.io/control-plane: ""
+            tolerations:
+              - key: node-role.kubernetes.io/control-plane
+                operator: Exists
+                effect: NoSchedule
+            affinity:
+              nodeAffinity:
+                preferredDuringSchedulingIgnoredDuringExecution:
+                  - weight: 1
+                    preference:
+                      matchExpressions:
+                        - key: node-role.kubernetes.io/control-plane
+                          operator: Exists
+            resources:
+              limits:
+                cpu: 200m
+                memory: 256Mi
+              requests:
+                cpu: 100m
+                memory: 128Mi
+          service:
+            telemetryPort: 9998
+            metricsPort: 9999
+            type: ClusterIP
+    timeoutSeconds: 60
+    validate: false
+    assertResources:
+      - apiVersion: apps/v1
+        kind: Deployment
+        metadata:
+          name: resource-state-metrics
+          namespace: resource-state-metrics
+          annotations:
+            crossplane.io/composition-resource-name: deployment
+          labels:
+            app.kubernetes.io/component: exporter
+            app.kubernetes.io/name: resource-state-metrics
+            app.kubernetes.io/version: "0.0.1"
+            crossplane.io/composite: rsm
+          ownerReferences:
+            - apiVersion: metrics.crossplane.io/v1alpha1
+              blockOwnerDeletion: true
+              controller: true
+              kind: ResourceStateMetrics
+              name: rsm
+              uid: ""
+        spec:
+          replicas: 1
+          selector:
+            matchLabels:
+              app.kubernetes.io/name: resource-state-metrics
+          template:
+            metadata:
+              annotations:
+                example-annotation: example-annotation-value
+              labels:
+                app.kubernetes.io/component: exporter
+                app.kubernetes.io/name: resource-state-metrics
+                app.kubernetes.io/version: "0.0.1"
+                example-label: example-label-value
+            spec:
+              automountServiceAccountToken: true
+              containers:
+                - name: resource-state-metrics
+                  image: "xpkg.crossplane.io/crossplane-contrib/resource-state-metrics-server:v0.3.0"
+                  args:
+                    - "--main-host=0.0.0.0"
+                    - "--main-port=9999"
+                    - "--self-host=0.0.0.0"
+                    - "--self-port=9998"
+                  ports:
+                    - containerPort: 9999
+                      name: http-metrics
+                    - containerPort: 9998
+                      name: telemetry
+                  livenessProbe:
+                    httpGet:
+                      path: /livez
+                      port: http-metrics
+                    initialDelaySeconds: 5
+                    timeoutSeconds: 5
+                  readinessProbe:
+                    httpGet:
+                      path: /readyz
+                      port: telemetry
+                    initialDelaySeconds: 5
+                    timeoutSeconds: 5
+                  resources:
+                    limits:
+                      cpu: "200m"
+                      memory: "256Mi"
+                    requests:
+                      cpu: "100m"
+                      memory: "128Mi"
+                  securityContext:
+                    allowPrivilegeEscalation: false
+                    capabilities:
+                      drop:
+                        - ALL
+                    readOnlyRootFilesystem: true
+                    runAsNonRoot: true
+                    runAsUser: 65534
+                    seccompProfile:
+                      type: RuntimeDefault
+              affinity:
+                nodeAffinity:
+                  preferredDuringSchedulingIgnoredDuringExecution:
+                    - preference:
+                        matchExpressions:
+                          - key: node-role.kubernetes.io/control-plane
+                            operator: Exists
+                      weight: 1
+              nodeSelector:
+                kubernetes.io/os: linux
+                node-role.kubernetes.io/control-plane: ""
+              tolerations:
+                - effect: NoSchedule
+                  key: node-role.kubernetes.io/control-plane
+                  operator: Exists
+              serviceAccountName: resource-state-metrics

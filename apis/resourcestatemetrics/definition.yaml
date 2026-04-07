@@ -39,6 +39,15 @@ spec:
                               or a specific version tag.
                             type: string
                         type: object
+                      affinity:
+                        description: "Affinity scheduling rules for the pod. Supports nodeAffinity, podAffinity, and podAntiAffinity. More info: https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#affinity-and-anti-affinity"
+                        type: object
+                        x-kubernetes-preserve-unknown-fields: true
+                      nodeSelector:
+                        description: "Additional node selector terms to apply to the pod. These are merged with the default 'kubernetes.io/os: linux' selector. More info: https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#nodeselector"
+                        type: object
+                        additionalProperties:
+                          x-kubernetes-preserve-unknown-fields: true
                       podMetadata:
                         description: "Pod's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata"
                         properties:
@@ -53,6 +62,12 @@ spec:
                               x-kubernetes-preserve-unknown-fields: true
                             type: object
                         type: object
+                      tolerations:
+                        description: "Tolerations for the pod. Allows the pod to be scheduled on nodes with matching taints. More info: https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/"
+                        type: array
+                        items:
+                          type: object
+                          x-kubernetes-preserve-unknown-fields: true
                       replicas:
                         description: Number of controller replicas to run. Defaults to 1 for
                           high availability consider 2 or more.
