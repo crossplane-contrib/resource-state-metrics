@@ -19,7 +19,6 @@ items:
         name: rsm
       spec:
         parameters:
-          namespace: resource-state-metrics
           rbac:
             allowedAPIGroups:
               - apiextensions.crossplane.io
@@ -69,7 +68,7 @@ items:
         kind: Deployment
         metadata:
           name: resource-state-metrics
-          namespace: resource-state-metrics
+          namespace: resource-state-metrics-system
           annotations:
             crossplane.io/composition-resource-name: deployment
           labels:
