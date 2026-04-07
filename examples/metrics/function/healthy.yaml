@@ -19,7 +19,7 @@ apiVersion: resource-state-metrics.instrumentation.k8s-sigs.io/v1alpha1
 kind: ResourceMetricsMonitor
 metadata:
   name: function-health
-  namespace: resource-state-metrics
+  namespace: resource-state-metrics-system
 spec:
   configuration:
     stores:

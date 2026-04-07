@@ -110,7 +110,7 @@ info:
 
 # Local Development Environment
 MONITORING_NS    ?= monitoring
-RSM_NAMESPACE    ?= resource-state-metrics
+RSM_NAMESPACE    ?= resource-state-metrics-system
 
 .PHONY: local
 local:
