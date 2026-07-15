@@ -436,7 +436,6 @@ items:
               controller: true
               kind: ResourceStateMetrics
               name: rsm
-              uid: ""
         rules:
           - apiGroups:
               - apiextensions.k8s.io
@@ -522,7 +521,6 @@ items:
               controller: true
               kind: ResourceStateMetrics
               name: rsm
-              uid: ""
         roleRef:
           apiGroup: rbac.authorization.k8s.io
           kind: ClusterRole
@@ -549,7 +547,6 @@ items:
               controller: true
               kind: ResourceStateMetrics
               name: rsm
-              uid: ""
         spec:
           replicas: 1
           selector:
@@ -627,7 +624,6 @@ items:
               controller: true
               kind: ResourceStateMetrics
               name: rsm
-              uid: ""
       - apiVersion: v1
         kind: Service
         metadata:
@@ -646,7 +642,6 @@ items:
               controller: true
               kind: ResourceStateMetrics
               name: rsm
-              uid: ""
         spec:
           type: ClusterIP
           selector:
@@ -677,4 +672,3 @@ items:
               controller: true
               kind: ResourceStateMetrics
               name: rsm
-              uid: ""
