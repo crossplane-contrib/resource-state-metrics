@@ -209,6 +209,15 @@ items:
                                               Script is the inline Starlark script source code.
                                               The script has access to `obj` (the resource as a dict) and built-in functions:
                                               - quantity_to_float(s): Parse Kubernetes Quantity ("100m", "1Gi") to float
+                                              - time: starlark-go's time module (https://pkg.go.dev/go.starlark.net/lib/time).
+                                                Notable entries: time.now() returns the current time.time; time.parse_time(s)
+                                                parses an RFC-3339 string (e.g. condition.lastTransitionTime) into a time.time;
+                                                subtracting two time.time values yields a time.duration whose .seconds
+                                                attribute is a float. Example duration-since-transition pattern:
+                                                `(time.now() - time.parse_time(c["lastTransitionTime"])).seconds`.
+                                                Note: time.parse_time errors on empty input, so guard with
+                                                `if not ts: continue` before calling it.
+                                              - label_prefix(prefix, labels): Prefix and sanitize a label dict's keys
                                               - metric(labels, value): Create a sample with labels dict and float value
                                               - family(name, help, kind, samples): Create a family with list of samples
                                             minLength: 1
@@ -427,7 +436,6 @@ items:
               controller: true
               kind: ResourceStateMetrics
               name: rsm
-              uid: ""
         rules:
           - apiGroups:
               - apiextensions.k8s.io
@@ -513,7 +521,6 @@ items:
               controller: true
               kind: ResourceStateMetrics
               name: rsm
-              uid: ""
         roleRef:
           apiGroup: rbac.authorization.k8s.io
           kind: ClusterRole
@@ -540,7 +547,6 @@ items:
               controller: true
               kind: ResourceStateMetrics
               name: rsm
-              uid: ""
         spec:
           replicas: 1
           selector:
@@ -559,7 +565,7 @@ items:
               automountServiceAccountToken: true
               containers:
                 - name: resource-state-metrics
-                  image: "xpkg.crossplane.io/crossplane-contrib/resource-state-metrics-server:v0.4.0"
+                  image: "xpkg.crossplane.io/crossplane-contrib/resource-state-metrics-server:97ca58e"
                   args:
                     - "--main-host=0.0.0.0"
                     - "--main-port=9999"
@@ -618,7 +624,6 @@ items:
               controller: true
               kind: ResourceStateMetrics
               name: rsm
-              uid: ""
       - apiVersion: v1
         kind: Service
         metadata:
@@ -637,7 +642,6 @@ items:
               controller: true
               kind: ResourceStateMetrics
               name: rsm
-              uid: ""
         spec:
           type: ClusterIP
           selector:
@@ -668,4 +672,3 @@ items:
               controller: true
               kind: ResourceStateMetrics
               name: rsm
-              uid: ""
