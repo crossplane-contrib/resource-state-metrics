@@ -15,7 +15,7 @@ spec:
       replicas: 1
       image:
         repository: xpkg.crossplane.io/crossplane-contrib/resource-state-metrics-server
-        tag: v0.5.0
+        tag: v0.6.0
       podMetadata:
         labels:
           example-label: example-label-value
