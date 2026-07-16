@@ -12,7 +12,7 @@
 #   make build IMAGE_REPO=ghcr.io/my-org/resource-state-metrics
 
 UPSTREAM_REPO    ?= https://github.com/kubernetes-sigs/resource-state-metrics.git
-UPSTREAM_COMMIT  ?= 97ca58e
+UPSTREAM_COMMIT  ?= 182f50f
 UPSTREAM_DIR     ?= .upstream/resource-state-metrics
 
 IMAGE_REPO       ?= ghcr.io/crossplane-contrib/resource-state-metrics-server
