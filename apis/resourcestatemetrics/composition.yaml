@@ -11,6 +11,3 @@ spec:
   - functionRef:
       name: crossplane-contrib-resource-state-metricsrsm
     step: rsm
-  - functionRef:
-      name: crossplane-contrib-function-auto-ready
-    step: crossplane-contrib-function-auto-ready

@@ -9,6 +9,7 @@ metadata:
   name: {{ $xr.spec.parameters.namespace.name }}
   annotations:
     {{ setResourceNameAnnotation "namespace" }}
+    gotemplating.fn.crossplane.io/ready: "True"
   labels:
     app.kubernetes.io/name: resource-state-metrics
     app.kubernetes.io/managed-by: crossplane

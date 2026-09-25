@@ -3,11 +3,6 @@ kind: Project
 metadata:
   name: resource-state-metrics
 spec:
-  dependsOn:
-  - apiVersion: pkg.crossplane.io/v1
-    kind: Function
-    package: xpkg.upbound.io/crossplane-contrib/function-auto-ready
-    version: '>=v0.0.0'
   description: Crossplane package for deploying resource-state-metrics, a Kubernetes
     controller that generates Prometheus metrics for custom resources
   license: Apache-2.0

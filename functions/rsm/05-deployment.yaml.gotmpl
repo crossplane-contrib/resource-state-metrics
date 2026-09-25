@@ -1,6 +1,18 @@
 # code: language=yaml
 # yaml-language-server: $schema=../../.up/json/models/index.schema.json
 
+# The Deployment is only marked ready once the observed Deployment reports
+# Available=True, which gates the XR's Ready condition on the exporter
+# actually running.
+{{ $observedDeployment := getComposedResource . "deployment" }}
+{{ $deploymentReady := false }}
+{{ if $observedDeployment }}
+  {{ range dig "status" "conditions" list $observedDeployment }}
+    {{ if and (eq .type "Available") (eq .status "True") }}
+      {{ $deploymentReady = true }}
+    {{ end }}
+  {{ end }}
+{{ end }}
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -9,6 +21,9 @@ metadata:
   namespace: {{ $xr.spec.parameters.namespace.name }}
   annotations:
     {{ setResourceNameAnnotation "deployment" }}
+    {{- if $deploymentReady }}
+    gotemplating.fn.crossplane.io/ready: "True"
+    {{- end }}
   labels:
     app.kubernetes.io/component: exporter
     app.kubernetes.io/name: resource-state-metrics
