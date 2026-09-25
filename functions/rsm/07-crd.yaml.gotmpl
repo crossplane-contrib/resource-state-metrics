@@ -14,13 +14,26 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+# The CRD is only marked ready once the observed CRD reports Established=True,
+# since ResourceMetricsMonitor objects cannot be created before that.
+{{ $observedCRD := getComposedResource . "crd" }}
+{{ $crdReady := false }}
+{{ if $observedCRD }}
+  {{ range dig "status" "conditions" list $observedCRD }}
+    {{ if and (eq .type "Established") (eq .status "True") }}
+      {{ $crdReady = true }}
+    {{ end }}
+  {{ end }}
+{{ end }}
 ---
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.16.5
+    {{- if $crdReady }}
     gotemplating.fn.crossplane.io/ready: "True"
+    {{- end }}
     {{ setResourceNameAnnotation "crd" }}
   name: resourcemetricsmonitors.resource-state-metrics.instrumentation.k8s-sigs.io
 spec:
