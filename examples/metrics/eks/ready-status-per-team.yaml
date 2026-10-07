@@ -46,7 +46,7 @@ spec:
                     value: "o.metadata.labels['team'] != null ? o.metadata.labels['team'] : 'unknown'"
                   - name: "region"
                     value: "o.spec.parameters.region != null ? o.spec.parameters.region : 'unknown'"
-                value: "o.status.conditions.exists(c, c.type == 'Ready' && c.status == 'True') ? 1 : 0"
+                value: "has(o.status) && has(o.status.conditions) && o.status.conditions.exists(c, c.type == 'Ready' && c.status == 'True') ? 1 : 0"
 ---
 apiVersion: resource-state-metrics.instrumentation.k8s-sigs.io/v1alpha1
 kind: ResourceMetricsMonitor
@@ -72,4 +72,4 @@ spec:
                     value: "o.metadata.labels['team'] != null ? o.metadata.labels['team'] : 'unknown'"
                   - name: "region"
                     value: "o.spec.parameters.region != null ? o.spec.parameters.region : 'unknown'"
-                value: "o.status.conditions.exists(c, c.type == 'Ready' && c.status == 'True') ? 1 : 0"
+                value: "has(o.status) && has(o.status.conditions) && o.status.conditions.exists(c, c.type == 'Ready' && c.status == 'True') ? 1 : 0"

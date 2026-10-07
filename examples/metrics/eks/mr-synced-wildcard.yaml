@@ -40,6 +40,6 @@ spec:
               - labels:
                   - name: "sync_reason"
                     value: |
-                      o.status.conditions.exists(c, c.type == 'Synced') ?
+                      has(o.status) && has(o.status.conditions) && o.status.conditions.exists(c, c.type == 'Synced') ?
                         o.status.conditions.filter(c, c.type == 'Synced')[0].reason : 'Unknown'
-                value: "o.status.conditions.exists(c, c.type == 'Synced' && c.status == 'True') ? 1 : 0"
+                value: "has(o.status) && has(o.status.conditions) && o.status.conditions.exists(c, c.type == 'Synced' && c.status == 'True') ? 1 : 0"

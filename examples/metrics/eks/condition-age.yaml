@@ -37,9 +37,9 @@ spec:
                   - name: "ready_status"
                     # Include current status for filtering in queries
                     value: |
-                      o.status.conditions.exists(c, c.type == 'Ready') ?
+                      has(o.status) && has(o.status.conditions) && o.status.conditions.exists(c, c.type == 'Ready') ?
                         o.status.conditions.filter(c, c.type == 'Ready')[0].status : 'Unknown'
                 # Convert RFC3339 timestamp to Unix seconds using RSM's custom unixSeconds() function
                 value: |
-                  o.status.conditions.exists(c, c.type == 'Ready') ?
+                  has(o.status) && has(o.status.conditions) && o.status.conditions.exists(c, c.type == 'Ready') ?
                     unixSeconds(o.status.conditions.filter(c, c.type == 'Ready')[0].lastTransitionTime) : 0
