@@ -50,7 +50,7 @@ spec:
               - labels:
                   - name: "region"
                     value: "o.spec.parameters.region != null ? o.spec.parameters.region : 'unknown'"
-                value: "o.status.conditions.exists(c, c.type == 'Ready' && c.status == 'True') ? 1 : 0"
+                value: "has(o.status) && has(o.status.conditions) && o.status.conditions.exists(c, c.type == 'Ready' && c.status == 'True') ? 1 : 0"
           - name: "eks_synced_limited"
             help: "Synced status of XRs with cardinality protection"
             # Family-level limit: max 500 samples for this family alone
@@ -59,4 +59,4 @@ spec:
               - labels:
                   - name: "region"
                     value: "o.spec.parameters.region != null ? o.spec.parameters.region : 'unknown'"
-                value: "o.status.conditions.exists(c, c.type == 'Synced' && c.status == 'True') ? 1 : 0"
+                value: "has(o.status) && has(o.status.conditions) && o.status.conditions.exists(c, c.type == 'Synced' && c.status == 'True') ? 1 : 0"

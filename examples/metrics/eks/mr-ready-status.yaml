@@ -41,13 +41,13 @@ spec:
                     value: "o.spec.forProvider.region != null ? o.spec.forProvider.region : 'unknown'"
                   - name: "sync_reason"
                     value: |
-                      o.status.conditions.exists(c, c.type == 'Synced') ?
+                      has(o.status) && has(o.status.conditions) && o.status.conditions.exists(c, c.type == 'Synced') ?
                         o.status.conditions.filter(c, c.type == 'Synced')[0].reason : 'Unknown'
-                value: "o.status.conditions.exists(c, c.type == 'Synced' && c.status == 'True') ? 1 : 0"
+                value: "has(o.status) && has(o.status.conditions) && o.status.conditions.exists(c, c.type == 'Synced' && c.status == 'True') ? 1 : 0"
           - name: "eks_mr_cluster_ready"
             help: "Ready status of EKS Cluster managed resources (1=ready, 0=not ready)"
             metrics:
               - labels:
                   - name: "region"
                     value: "o.spec.forProvider.region != null ? o.spec.forProvider.region : 'unknown'"
-                value: "o.status.conditions.exists(c, c.type == 'Ready' && c.status == 'True') ? 1 : 0"
+                value: "has(o.status) && has(o.status.conditions) && o.status.conditions.exists(c, c.type == 'Ready' && c.status == 'True') ? 1 : 0"

@@ -37,11 +37,11 @@ spec:
                     value: "o.spec.package"
                   - name: "revision"
                     value: "o.status.currentRevision != null ? o.status.currentRevision : 'unknown'"
-                value: "o.status.conditions.exists(c, c.type == 'Healthy' && c.status == 'True') ? 1 : 0"
+                value: "has(o.status) && has(o.status.conditions) && o.status.conditions.exists(c, c.type == 'Healthy' && c.status == 'True') ? 1 : 0"
           - name: "function_installed"
             help: "Installed status of Crossplane functions (1=installed, 0=not installed)"
             metrics:
               - labels:
                   - name: "package"
                     value: "o.spec.package"
-                value: "o.status.conditions.exists(c, c.type == 'Installed' && c.status == 'True') ? 1 : 0"
+                value: "has(o.status) && has(o.status.conditions) && o.status.conditions.exists(c, c.type == 'Installed' && c.status == 'True') ? 1 : 0"

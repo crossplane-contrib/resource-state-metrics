@@ -47,6 +47,6 @@ spec:
                     value: "o.spec.parameters.region != null ? o.spec.parameters.region : 'unknown'"
                   - name: "responsive_reason"
                     value: |
-                      o.status.conditions.exists(c, c.type == 'Responsive') ?
+                      has(o.status) && has(o.status.conditions) && o.status.conditions.exists(c, c.type == 'Responsive') ?
                         o.status.conditions.filter(c, c.type == 'Responsive')[0].reason : 'Unknown'
-                value: "o.status.conditions.exists(c, c.type == 'Responsive' && c.status == 'True') ? 1 : 0"
+                value: "has(o.status) && has(o.status.conditions) && o.status.conditions.exists(c, c.type == 'Responsive' && c.status == 'True') ? 1 : 0"

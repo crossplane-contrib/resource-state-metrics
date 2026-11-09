@@ -131,7 +131,7 @@ Best for conditional logic, null-safety, and checking Kubernetes conditions.
 
 ```yaml
 resolver: cel
-value: "o.status.conditions.exists(c, c.type == 'Ready' && c.status == 'True') ? 1 : 0"
+value: "has(o.status) && has(o.status.conditions) && o.status.conditions.exists(c, c.type == 'Ready' && c.status == 'True') ? 1 : 0"
 ```
 
 Custom CEL functions provided by RSM:
@@ -188,7 +188,7 @@ spec:
           - name: "eks_team_ready"
             help: "Ready status of EKS XRs per team"
             metrics:
-              - value: "o.status.conditions.exists(c, c.type == 'Ready' && c.status == 'True') ? 1 : 0"
+              - value: "has(o.status) && has(o.status.conditions) && o.status.conditions.exists(c, c.type == 'Ready' && c.status == 'True') ? 1 : 0"
 ```
 
 See `examples/metrics/eks/ready-status-per-team.yaml` for the full example.
